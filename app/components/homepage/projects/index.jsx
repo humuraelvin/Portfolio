@@ -28,21 +28,21 @@ const Projects = () => {
   };
 
   return (
-    <div id='projects' className="relative z-50 py-20 lg:py-32">
-      <div className="container mx-auto px-4">
+    <div id='projects' className="relative z-10 py-12 sm:py-16 md:py-20 lg:py-28">
+      <div className="container mx-auto px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center mb-10 sm:mb-12 md:mb-16"
         >
-          <h2 className="text-3xl md:text-4xl font-bold mb-6 inline-block">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 inline-block">
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
               {showAll ? "All Projects" : "Featured Projects"}
             </span>
           </h2>
-          <p className="text-gray-400 max-w-2xl mx-auto">
+          <p className="text-gray-400 max-w-2xl mx-auto text-sm sm:text-base">
             Explore my portfolio of projects that showcase my skills and experience in software development, 
             from full-stack applications to specialized tools and interfaces.
           </p>
@@ -54,7 +54,7 @@ const Projects = () => {
               key={project.id}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
+              transition={{ duration: 0.5, delay: Math.min(index * 0.1, 0.5) }}
               viewport={{ once: true }}
             >
               <ProjectCard project={project} />
@@ -67,31 +67,31 @@ const Projects = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
           viewport={{ once: true }}
-          className="mt-12 text-center"
+          className="mt-8 sm:mt-10 md:mt-12 text-center"
         >
           {!showAll && projectsData.length > featuredProjects.length ? (
             <button 
               onClick={handleToggleProjects}
-              className="btn btn-outline group"
+              className="btn btn-outline group text-sm sm:text-base py-2 sm:py-2.5"
             >
               View More Projects
-              <FaArrowRight className="transition-transform group-hover:translate-x-1" />
+              <FaArrowRight className="text-sm sm:text-base transition-transform group-hover:translate-x-1" />
             </button>
           ) : showAll ? (
             <button 
               onClick={handleToggleProjects}
-              className="btn btn-outline group"
+              className="btn btn-outline group text-sm sm:text-base py-2 sm:py-2.5"
             >
               View Featured Projects
-              <FaArrowUp className="transition-transform group-hover:-translate-y-1" />
+              <FaArrowUp className="text-sm sm:text-base transition-transform group-hover:-translate-y-1" />
             </button>
           ) : null}
         </motion.div>
       </div>
 
-      {/* Background decorations */}
-      <div className="absolute top-1/4 -left-32 w-64 h-64 bg-primary/5 rounded-full filter blur-3xl"></div>
-      <div className="absolute bottom-1/4 -right-32 w-64 h-64 bg-secondary/5 rounded-full filter blur-3xl"></div>
+      {/* Background decorations - adjusted for mobile */}
+      <div className="absolute top-1/4 -left-16 sm:-left-32 w-48 sm:w-64 h-48 sm:h-64 bg-primary/5 rounded-full filter blur-3xl"></div>
+      <div className="absolute bottom-1/4 -right-16 sm:-right-32 w-48 sm:w-64 h-48 sm:h-64 bg-secondary/5 rounded-full filter blur-3xl"></div>
     </div>
   );
 };

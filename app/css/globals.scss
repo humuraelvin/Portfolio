@@ -11,6 +11,7 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
   }
   
   body {
@@ -22,6 +23,7 @@
     )
     rgb(var(--background-start-rgb));
     overflow-x: hidden;
+    touch-action: manipulation;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -29,33 +31,43 @@
   }
 
   h1 {
-    @apply text-4xl md:text-5xl lg:text-6xl;
+    @apply text-3xl sm:text-4xl md:text-5xl lg:text-6xl;
   }
 
   h2 {
-    @apply text-3xl md:text-4xl;
+    @apply text-2xl sm:text-3xl md:text-4xl;
   }
 
   h3 {
-    @apply text-2xl md:text-3xl;
+    @apply text-xl sm:text-2xl md:text-3xl;
+  }
+
+  /* Handle mobile tap states */
+  a, button {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Prevent text selection on buttons */
+  button {
+    @apply select-none;
   }
 }
 
 @layer components {
   .btn {
-    @apply px-6 py-3 rounded-lg font-medium transition-all duration-300 inline-flex items-center gap-2;
+    @apply px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg font-medium transition-all duration-300 inline-flex items-center gap-2 text-sm sm:text-base;
   }
 
   .btn-primary {
-    @apply bg-primary text-white hover:bg-primary-dark;
+    @apply bg-primary text-white hover:bg-primary-dark active:bg-primary-dark;
   }
 
   .btn-secondary {
-    @apply bg-secondary text-white hover:bg-secondary-dark;
+    @apply bg-secondary text-white hover:bg-secondary-dark active:bg-secondary-dark;
   }
 
   .btn-outline {
-    @apply border-2 border-primary text-primary hover:bg-primary hover:text-white;
+    @apply border-2 border-primary text-primary hover:bg-primary hover:text-white active:bg-primary active:text-white;
   }
 
   .card {
@@ -63,11 +75,29 @@
   }
 
   .section-title {
-    @apply text-2xl md:text-3xl font-bold relative inline-block;
+    @apply text-xl sm:text-2xl md:text-3xl font-bold relative inline-block;
   }
 
   .section-title::after {
     @apply content-[''] absolute w-1/2 h-1 bg-primary rounded-full bottom-0 left-0 -mb-2;
+  }
+
+  /* Responsive containers */
+  .container-narrow {
+    @apply w-full max-w-screen-lg mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .container-wide {
+    @apply w-full max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Responsive spacing utilities */
+  .section-spacing {
+    @apply py-10 sm:py-16 md:py-20 lg:py-24;
+  }
+
+  .section-spacing-sm {
+    @apply py-6 sm:py-8 md:py-12 lg:py-16;
   }
 }
 
@@ -122,8 +152,13 @@
 
 .projects-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+  }
 }
 
 #sticky-card-1 {
@@ -144,4 +179,31 @@
 
 .sticky-card {
   top: calc(var(--index) * 4rem);
+}
+
+/* Scrollbar styling for webkit browsers */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.5);
+  border-radius: 2px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.7);
+}
+
+/* Mobile touch optimizations */
+@media (max-width: 767px) {
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
 }

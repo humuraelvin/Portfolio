@@ -3,7 +3,7 @@ export const projectsData = [
         id: 1,
         name: 'Crime Reporting System',
         description: 'A comprehensive crime reporting platform built with Angular, allowing citizens to report crimes, track case status, and access crime statistics. Features include user authentication, real-time updates, and an admin dashboard for law enforcement.',
-        tools: ['Angular', 'TypeScript', 'CSS', 'Node.js', 'Express', 'MongoDB'],
+        tools: ['Angular', 'TypeScript', 'CSS', 'Spring Booot', 'Spring Security', 'PostgreSQL', 'JWT'],
         role: 'Full Stack Developer',
         image: 'data:image/svg+xml,<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#2563eb"/><stop offset="100%" stop-color="#7c3aed"/></linearGradient></defs><rect width="100%" height="100%" fill="url(#gradient)"/><text x="50%" y="50%" font-family="Arial" font-size="72" text-anchor="middle" fill="white">Crime Reporting System</text></svg>',
         featured: true,

@@ -56,7 +56,7 @@ function ProjectCard({ project }) {
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <div className="relative overflow-hidden h-48">
+        <div className="relative overflow-hidden h-40 sm:h-48">
           <motion.div
             animate={{ scale: isHovered ? 1.05 : 1 }}
             transition={{ duration: 0.3 }}
@@ -66,50 +66,52 @@ function ProjectCard({ project }) {
               src={imageSrc}
               alt={project.name}
               fill
+              sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
               onError={() => setImageError(true)}
               style={{ objectFit: 'cover' }}
               className="rounded-t-xl"
+              priority={project.id <= 4}
             />
           </motion.div>
           
           <div className="absolute inset-0 bg-gradient-to-t from-dark-darker to-transparent opacity-70"></div>
           
-          <div className="absolute bottom-4 left-4 z-10">
-            <span className="text-xs font-medium bg-primary/80 text-white px-2 py-1 rounded">
+          <div className="absolute bottom-3 sm:bottom-4 left-3 sm:left-4 z-10">
+            <span className="text-xxs sm:text-xs font-medium bg-primary/80 text-white px-1.5 sm:px-2 py-0.5 sm:py-1 rounded">
               {project.role}
             </span>
           </div>
         </div>
         
-        <div className="p-6 flex-grow flex flex-col">
-          <div className="mb-4">
-            <h3 className="text-xl font-bold mb-2 text-white group-hover:text-primary transition-colors">
+        <div className="p-4 sm:p-6 flex-grow flex flex-col">
+          <div className="mb-3 sm:mb-4">
+            <h3 className="text-lg sm:text-xl font-bold mb-1.5 sm:mb-2 text-white group-hover:text-primary transition-colors">
               {project.name}
             </h3>
-            <p className="text-gray-400 text-sm line-clamp-3">
+            <p className="text-gray-400 text-xs sm:text-sm line-clamp-3 leading-relaxed">
               {project.description}
             </p>
           </div>
           
           <div className="mt-auto">
-            <div className="mb-4 flex flex-wrap gap-2">
+            <div className="mb-3 sm:mb-4 flex flex-wrap gap-1.5 sm:gap-2">
               {project.tools.slice(0, 4).map((tool, i) => (
                 <span 
                   key={i} 
-                  className="text-xs px-2 py-1 rounded bg-dark-lighter text-primary"
+                  className="text-xxs sm:text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 rounded bg-dark-lighter text-primary"
                 >
                   {tool}
                 </span>
               ))}
               {project.tools.length > 4 && (
-                <span className="text-xs px-2 py-1 rounded bg-dark-lighter text-gray-400">
+                <span className="text-xxs sm:text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 rounded bg-dark-lighter text-gray-400">
                   +{project.tools.length - 4}
                 </span>
               )}
             </div>
             
             <div className="flex justify-between items-center">
-              <div className="flex gap-3">
+              <div className="flex gap-2 sm:gap-3">
                 {project.code && (
                   <motion.a
                     whileHover={{ scale: 1.1 }}
@@ -117,9 +119,10 @@ function ProjectCard({ project }) {
                     href={project.code}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-primary hover:text-white p-2 rounded-full bg-dark-lighter hover:bg-primary transition-colors"
+                    className="text-primary hover:text-white p-1.5 sm:p-2 rounded-full bg-dark-lighter hover:bg-primary transition-colors"
+                    aria-label="View Source Code"
                   >
-                    <FaGithub className="w-5 h-5" />
+                    <FaGithub className="w-4 h-4 sm:w-5 sm:h-5" />
                   </motion.a>
                 )}
                 
@@ -130,9 +133,10 @@ function ProjectCard({ project }) {
                     href={project.demo}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-primary hover:text-white p-2 rounded-full bg-dark-lighter hover:bg-primary transition-colors"
+                    className="text-primary hover:text-white p-1.5 sm:p-2 rounded-full bg-dark-lighter hover:bg-primary transition-colors"
+                    aria-label="View Live Demo"
                   >
-                    <FiExternalLink className="w-5 h-5" />
+                    <FiExternalLink className="w-4 h-4 sm:w-5 sm:h-5" />
                   </motion.a>
                 )}
               </div>
@@ -140,7 +144,8 @@ function ProjectCard({ project }) {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="text-xs font-medium text-primary hover:underline"
+                className="text-xxs sm:text-xs font-medium text-primary hover:underline"
+                aria-label="Learn more about this project"
               >
                 Learn more
               </motion.button>

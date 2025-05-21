@@ -1,7 +1,7 @@
 "use client";
 
 import { personalData } from "@/utils/data/personal-data";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { FaBars, FaDownload, FaTimes } from "react-icons/fa";
@@ -37,6 +37,30 @@ const NavBar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Close menu when ESC key is pressed
+  useEffect(() => {
+    const handleEscKey = (event) => {
+      if (event.key === "Escape") {
+        setMobileMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("keydown", handleEscKey);
+    return () => document.removeEventListener("keydown", handleEscKey);
+  }, []);
+
+  // Prevent scrolling when mobile menu is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [mobileMenuOpen]);
+
   return (
     <>
       <motion.header
@@ -45,18 +69,18 @@ const NavBar = () => {
         transition={{ duration: 0.5 }}
         className={`fixed top-0 left-0 right-0 z-50 ${
           scrolled 
-            ? "bg-dark-darker/80 backdrop-blur-lg shadow-lg" 
+            ? "bg-dark-darker/90 backdrop-blur-xl shadow-lg" 
             : "bg-transparent"
         } transition-all duration-300`}
       >
-        <nav className="container mx-auto px-4 py-4">
+        <nav className="container mx-auto px-4 py-3 sm:py-4">
           <div className="flex items-center justify-between">
             {/* Logo/Name */}
-            <Link href="/" className="flex items-center">
+            <Link href="/" className="flex items-center z-50 relative">
               <motion.span 
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary"
+                className="text-xl sm:text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary"
               >
                 {personalData.name.split(' ')[0]}
                 <span className="text-white">.</span>
@@ -64,7 +88,7 @@ const NavBar = () => {
             </Link>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-1">
+            <div className="hidden lg:flex items-center space-x-1">
               {navLinks.map((link, index) => (
                 <motion.div
                   key={index}
@@ -74,7 +98,7 @@ const NavBar = () => {
                 >
                   <Link 
                     href={link.href}
-                    className="px-4 py-2 text-gray-300 hover:text-white transition-colors duration-300"
+                    className="px-3 py-2 text-sm xl:text-base xl:px-4 text-gray-300 hover:text-white transition-colors duration-300"
                   >
                     {link.name}
                   </Link>
@@ -88,7 +112,7 @@ const NavBar = () => {
                 <Link 
                   href={personalData.resume} 
                   target="_blank"
-                  className="ml-4 px-4 py-2 bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors duration-300 flex items-center gap-2"
+                  className="ml-2 sm:ml-4 px-3 py-2 sm:px-4 bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors duration-300 flex items-center gap-2 text-sm xl:text-base"
                 >
                   <span>Resume</span>
                   <FaDownload size={14} />
@@ -97,52 +121,95 @@ const NavBar = () => {
             </div>
 
             {/* Mobile Menu Button */}
-            <div className="md:hidden">
+            <div className="lg:hidden z-50 relative">
               <button
                 onClick={toggleMobileMenu}
-                className="p-2 rounded-lg bg-dark-lighter text-white focus:outline-none"
+                aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+                className="p-2 rounded-lg bg-dark-lighter text-white focus:outline-none hover:bg-primary/80 transition-colors duration-300"
               >
-                {mobileMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+                {mobileMenuOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
               </button>
             </div>
           </div>
         </nav>
       </motion.header>
 
-      {/* Mobile Menu */}
-      <motion.div
-        initial={false}
-        animate={{ 
-          height: mobileMenuOpen ? 'auto' : 0,
-          opacity: mobileMenuOpen ? 1 : 0
-        }}
-        transition={{ duration: 0.3 }}
-        className={`fixed top-16 left-0 right-0 z-40 bg-dark-darker/95 backdrop-blur-lg overflow-hidden md:hidden`}
-      >
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex flex-col space-y-4">
-            {navLinks.map((link, index) => (
-              <Link
-                key={index}
-                href={link.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className="px-4 py-3 text-gray-300 hover:text-white border-b border-gray-700"
-              >
-                {link.name}
-              </Link>
-            ))}
-            <Link
-              href={personalData.resume}
-              target="_blank"
+      {/* Mobile Menu - Full screen overlay */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="fixed inset-0 bg-dark-darker/70 backdrop-blur-lg z-40 lg:hidden"
               onClick={() => setMobileMenuOpen(false)}
-              className="px-4 py-3 bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors duration-300 flex items-center justify-center gap-2 mt-4"
+            />
+            
+            {/* Slide-in menu */}
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "tween", duration: 0.3 }}
+              className="fixed top-0 right-0 bottom-0 w-4/5 max-w-sm bg-dark-darker/95 backdrop-blur-lg z-50 lg:hidden shadow-xl"
             >
-              <span>Resume</span>
-              <FaDownload size={14} />
-            </Link>
-          </div>
-        </div>
-      </motion.div>
+              <div className="flex flex-col h-full pt-20 pb-6 px-6">
+                <div className="flex-grow overflow-y-auto">
+                  <div className="flex flex-col space-y-1">
+                    {navLinks.map((link, index) => (
+                      <motion.div
+                        key={index}
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.05 }}
+                      >
+                        <Link
+                          href={link.href}
+                          onClick={() => setMobileMenuOpen(false)}
+                          className="block px-4 py-3 text-lg font-medium text-gray-300 hover:text-white hover:bg-dark-lighter rounded-lg transition-colors duration-200"
+                        >
+                          {link.name}
+                        </Link>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+                
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="mt-6"
+                >
+                  <Link
+                    href={personalData.resume}
+                    target="_blank"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="w-full px-4 py-3 bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors duration-300 flex items-center justify-center gap-2 text-lg font-medium"
+                  >
+                    <span>Resume</span>
+                    <FaDownload size={16} />
+                  </Link>
+                </motion.div>
+                
+                <div className="mt-10 pt-6 border-t border-gray-700">
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.4 }}
+                    className="text-sm text-gray-400 text-center"
+                  >
+                    &copy; {new Date().getFullYear()} {personalData.name}
+                  </motion.div>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
       
       {/* Spacer for fixed header */}
       <div className="h-16"></div>
