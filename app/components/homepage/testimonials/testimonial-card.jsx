@@ -55,7 +55,7 @@ const TestimonialCard = ({ testimonial, isActive }) => {
             <div>
               <FaQuoteLeft className="text-primary mb-2 sm:mb-3 w-5 h-5 sm:w-6 sm:h-6 opacity-60" />
               <p className="text-gray-200 text-xs sm:text-sm md:text-base mb-4 sm:mb-6 italic leading-relaxed">
-                "{testimonial.testimonial}"
+                &ldquo;{testimonial.testimonial}&rdquo;
               </p>
             </div>
             
