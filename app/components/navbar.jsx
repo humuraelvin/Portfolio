@@ -156,6 +156,15 @@ const NavBar = () => {
               transition={{ type: "tween", duration: 0.3 }}
               className="fixed top-0 right-0 bottom-0 w-4/5 max-w-sm bg-dark-darker/95 backdrop-blur-lg z-50 lg:hidden shadow-xl"
             >
+              {/* Close button inside sidebar */}
+              <button
+                onClick={() => setMobileMenuOpen(false)}
+                aria-label="Close menu"
+                className="absolute top-6 right-6 p-2 rounded-full bg-dark-lighter text-white hover:bg-primary/80 transition-colors duration-300"
+              >
+                <FaTimes size={18} />
+              </button>
+              
               <div className="flex flex-col h-full pt-20 pb-6 px-6">
                 <div className="flex-grow overflow-y-auto">
                   <div className="flex flex-col space-y-1">
