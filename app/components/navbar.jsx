@@ -139,11 +139,11 @@ const NavBar = () => {
         {mobileMenuOpen && (
           <>
             {/* Backdrop */}
-            <motion.div
+      <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
+        transition={{ duration: 0.3 }}
               className="fixed inset-0 bg-dark-darker/70 backdrop-blur-lg z-40 lg:hidden"
               onClick={() => setMobileMenuOpen(false)}
             />
@@ -179,11 +179,11 @@ const NavBar = () => {
                           href={link.href}
                           onClick={() => setMobileMenuOpen(false)}
                           className="block px-4 py-3 text-lg font-medium text-gray-300 hover:text-white hover:bg-dark-lighter rounded-lg transition-colors duration-200"
-                        >
-                          {link.name}
-                        </Link>
+              >
+                {link.name}
+              </Link>
                       </motion.div>
-                    ))}
+            ))}
                   </div>
                 </div>
                 
@@ -193,15 +193,15 @@ const NavBar = () => {
                   transition={{ delay: 0.3 }}
                   className="mt-6"
                 >
-                  <Link
-                    href={personalData.resume}
-                    target="_blank"
-                    onClick={() => setMobileMenuOpen(false)}
+            <Link
+              href={personalData.resume}
+              target="_blank"
+              onClick={() => setMobileMenuOpen(false)}
                     className="w-full px-4 py-3 bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors duration-300 flex items-center justify-center gap-2 text-lg font-medium"
-                  >
-                    <span>Resume</span>
+            >
+              <span>Resume</span>
                     <FaDownload size={16} />
-                  </Link>
+            </Link>
                 </motion.div>
                 
                 <div className="mt-10 pt-6 border-t border-gray-700">
@@ -213,9 +213,9 @@ const NavBar = () => {
                   >
                     &copy; {new Date().getFullYear()} {personalData.name}
                   </motion.div>
-                </div>
-              </div>
-            </motion.div>
+          </div>
+        </div>
+      </motion.div>
           </>
         )}
       </AnimatePresence>
