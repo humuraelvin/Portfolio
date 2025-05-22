@@ -1,25 +1,29 @@
 "use client";
 
-import { personalData } from '@/utils/data/personal-data';
-import ScrollReveal from '../../helper/scroll-reveal';
-import { motion } from 'framer-motion';
-import Link from 'next/link';
-import { BiLogoLinkedin } from "react-icons/bi";
-import { CiLocationOn } from "react-icons/ci";
-import { FaStackOverflow } from 'react-icons/fa';
-import { FaGithub, FaInstagram, FaXTwitter } from "react-icons/fa6";
-import { IoMdCall } from "react-icons/io";
-import { MdAlternateEmail } from "react-icons/md";
-import ContactForm from './contact-form';
+import { ScrollReveal } from "@/app/components/helper/scroll-reveal";
+import { useTheme } from "@/app/context/ThemeContext";
+import { motion } from "framer-motion";
+import { useState } from "react";
+import { FaEnvelope, FaGithub, FaLinkedinIn, FaMapMarkerAlt, FaTwitter } from "react-icons/fa";
+import { personalData } from "@/utils/data/personal-data";
+import ContactForm from "./contact-form";
 
-function ContactSection() {
+const ContactSection = () => {
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
+  const [hoveredIcon, setHoveredIcon] = useState(null);
+  
+  const socialLinks = [
+    { name: "LinkedIn", icon: <FaLinkedinIn />, url: personalData.socialMedia.linkedin, color: "bg-[#0077B5]" },
+    { name: "GitHub", icon: <FaGithub />, url: personalData.socialMedia.github, color: "bg-[#333]" },
+    { name: "Twitter", icon: <FaTwitter />, url: personalData.socialMedia.twitter, color: "bg-[#1DA1F2]" },
+  ];
+
   return (
-    <div id="contact" className="relative py-20 lg:py-32">
+    <section id="contact" className="py-16 sm:py-20 md:py-24 lg:py-28 relative overflow-hidden">
       {/* Background decorations */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-dark-darker/50 to-transparent"></div>
-        <div className="absolute -left-32 top-1/4 w-64 h-64 bg-primary/5 rounded-full filter blur-3xl"></div>
-        <div className="absolute -right-32 bottom-1/4 w-64 h-64 bg-secondary/5 rounded-full filter blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-dark-darker/50 to-transparent"></div>
       </div>
 
       <div className="container mx-auto px-4">
@@ -30,7 +34,7 @@ function ContactSection() {
                 Get In Touch
               </span>
             </h2>
-            <p className="text-gray-400 max-w-2xl mx-auto">
+            <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'} max-w-2xl mx-auto`}>
               Have a project in mind or just want to say hello? Feel free to reach out and I&apos;ll get back to you as soon as possible.
             </p>
           </div>
@@ -39,100 +43,58 @@ function ContactSection() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <ScrollReveal direction="left">
             <div className="glass-card p-0.5">
-              <div className="bg-dark-lighter p-8 rounded-xl">
-                <h3 className="text-2xl font-bold mb-6 text-white">Contact Information</h3>
+              <div className={`${isDark ? 'bg-dark-lighter' : 'bg-light-darker'} p-6 sm:p-8 rounded-xl`}>
+                <h3 className={`text-xl sm:text-2xl font-bold mb-6 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                  Contact Information
+                </h3>
                 
-                <div className="space-y-6">
-                  <div className="flex items-start space-x-4">
-                    <div className="shrink-0 bg-primary/10 p-3 rounded-lg">
-                      <MdAlternateEmail className="text-primary w-6 h-6" />
+                <div className="space-y-4 sm:space-y-5 mb-6 sm:mb-8">
+                  <div className="flex items-start gap-3 sm:gap-4">
+                    <div className="mt-1 p-2 rounded-full bg-primary/10">
+                      <FaEnvelope className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                     </div>
                     <div>
-                      <p className="text-sm text-gray-400 mb-1">Email</p>
+                      <h4 className={`text-sm sm:text-base font-medium mb-1 ${isDark ? 'text-white' : 'text-gray-900'}`}>Email</h4>
                       <a 
                         href={`mailto:${personalData.email}`} 
-                        className="text-white hover:text-primary transition-colors"
+                        className={`text-sm sm:text-base ${isDark ? 'text-gray-300 hover:text-white' : 'text-gray-700 hover:text-gray-900'} transition-colors duration-300`}
                       >
                         {personalData.email}
                       </a>
                     </div>
                   </div>
                   
-                  <div className="flex items-start space-x-4">
-                    <div className="shrink-0 bg-primary/10 p-3 rounded-lg">
-                      <IoMdCall className="text-primary w-6 h-6" />
+                  <div className="flex items-start gap-3 sm:gap-4">
+                    <div className="mt-1 p-2 rounded-full bg-primary/10">
+                      <FaMapMarkerAlt className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                     </div>
                     <div>
-                      <p className="text-sm text-gray-400 mb-1">Phone</p>
-                      <a 
-                        href={`tel:${personalData.phone}`} 
-                        className="text-white hover:text-primary transition-colors"
-                      >
-                        {personalData.phone}
-                      </a>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start space-x-4">
-                    <div className="shrink-0 bg-primary/10 p-3 rounded-lg">
-                      <CiLocationOn className="text-primary w-6 h-6" />
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-400 mb-1">Location</p>
-                      <p className="text-white">{personalData.address}</p>
+                      <h4 className={`text-sm sm:text-base font-medium mb-1 ${isDark ? 'text-white' : 'text-gray-900'}`}>Location</h4>
+                      <p className={`text-sm sm:text-base ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                        {personalData.location}
+                      </p>
                     </div>
                   </div>
                 </div>
                 
-                <div className="mt-8 pt-8 border-t border-gray-700">
-                  <p className="text-sm text-gray-400 mb-4">Connect with me on social media</p>
-                  <div className="flex space-x-4">
+                <h4 className={`text-sm sm:text-base font-medium mb-3 ${isDark ? 'text-white' : 'text-gray-900'}`}>Connect with me</h4>
+                <div className="flex gap-3 sm:gap-4">
+                  {socialLinks.map((social, index) => (
                     <motion.a
-                      whileHover={{ y: -3 }}
-                      href={personalData.github}
+                      key={index}
+                      href={social.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="p-2.5 bg-dark text-primary hover:bg-primary hover:text-white rounded-lg transition-colors"
+                      className={`p-2.5 sm:p-3 rounded-full ${social.color} text-white flex items-center justify-center hover:opacity-90 transition-all duration-300`}
+                      onMouseEnter={() => setHoveredIcon(index)}
+                      onMouseLeave={() => setHoveredIcon(null)}
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                      aria-label={`Visit my ${social.name} profile`}
                     >
-                      <FaGithub className="w-5 h-5" />
+                      <span className="text-base sm:text-lg">{social.icon}</span>
                     </motion.a>
-                    <motion.a
-                      whileHover={{ y: -3 }}
-                      href={personalData.linkedIn}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-2.5 bg-dark text-primary hover:bg-primary hover:text-white rounded-lg transition-colors"
-                    >
-                      <BiLogoLinkedin className="w-5 h-5" />
-                    </motion.a>
-                    <motion.a
-                      whileHover={{ y: -3 }}
-                      href={personalData.twitter}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-2.5 bg-dark text-primary hover:bg-primary hover:text-white rounded-lg transition-colors"
-                    >
-                      <FaXTwitter className="w-5 h-5" />
-                    </motion.a>
-                    <motion.a
-                      whileHover={{ y: -3 }}
-                      href={personalData.stackOverflow}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-2.5 bg-dark text-primary hover:bg-primary hover:text-white rounded-lg transition-colors"
-                    >
-                      <FaStackOverflow className="w-5 h-5" />
-                    </motion.a>
-                    <motion.a
-                      whileHover={{ y: -3 }}
-                      href={personalData.instagram}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-2.5 bg-dark text-primary hover:bg-primary hover:text-white rounded-lg transition-colors"
-                    >
-                      <FaInstagram className="w-5 h-5" />
-                    </motion.a>
-                  </div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -143,7 +105,7 @@ function ContactSection() {
           </ScrollReveal>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

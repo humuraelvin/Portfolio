@@ -4,8 +4,11 @@ import axios from "axios";
 import { useState } from "react";
 import { TbMailForward } from "react-icons/tb";
 import { toast } from "react-toastify";
+import { useTheme } from "@/app/context/ThemeContext";
 
 function ContactForm() {
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
   const [error, setError] = useState({ email: false, required: false });
   const [isLoading, setIsLoading] = useState(false);
   const [userInput, setUserInput] = useState({
@@ -54,16 +57,16 @@ function ContactForm() {
 
   return (
     <div className="glass-card p-0.5">
-      <div className="bg-dark-lighter p-8 rounded-xl">
-        <h3 className="text-2xl font-bold mb-6 text-white">Send a Message</h3>
-        <p className="text-gray-400 mb-8">
+      <div className={`${isDark ? 'bg-dark-lighter' : 'bg-light-darker'} p-8 rounded-xl`}>
+        <h3 className={`text-2xl font-bold mb-6 ${isDark ? 'text-white' : 'text-gray-900'}`}>Send a Message</h3>
+        <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'} mb-8`}>
           {"Have a project in mind or want to discuss opportunities? I'd love to hear from you."}
         </p>
         <div className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-gray-400 mb-2">Your Name</label>
+            <label className={`block text-sm font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'} mb-2`}>Your Name</label>
             <input
-              className="w-full bg-dark border border-gray-700 focus:border-primary focus:ring-1 focus:ring-primary rounded-lg px-4 py-3 text-white outline-none transition-colors"
+              className={`w-full ${isDark ? 'bg-dark border-gray-700 text-white' : 'bg-white border-gray-300 text-gray-900'} border focus:border-primary focus:ring-1 focus:ring-primary rounded-lg px-4 py-3 outline-none transition-colors`}
               type="text"
               maxLength="100"
               required={true}
@@ -75,9 +78,9 @@ function ContactForm() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-400 mb-2">Your Email</label>
+            <label className={`block text-sm font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'} mb-2`}>Your Email</label>
             <input
-              className="w-full bg-dark border border-gray-700 focus:border-primary focus:ring-1 focus:ring-primary rounded-lg px-4 py-3 text-white outline-none transition-colors"
+              className={`w-full ${isDark ? 'bg-dark border-gray-700 text-white' : 'bg-white border-gray-300 text-gray-900'} border focus:border-primary focus:ring-1 focus:ring-primary rounded-lg px-4 py-3 outline-none transition-colors`}
               type="email"
               maxLength="100"
               required={true}
@@ -93,9 +96,9 @@ function ContactForm() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-400 mb-2">Your Message</label>
+            <label className={`block text-sm font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'} mb-2`}>Your Message</label>
             <textarea
-              className="w-full bg-dark border border-gray-700 focus:border-primary focus:ring-1 focus:ring-primary rounded-lg px-4 py-3 text-white outline-none transition-colors resize-none"
+              className={`w-full ${isDark ? 'bg-dark border-gray-700 text-white' : 'bg-white border-gray-300 text-gray-900'} border focus:border-primary focus:ring-1 focus:ring-primary rounded-lg px-4 py-3 outline-none transition-colors resize-none`}
               maxLength="500"
               name="message"
               required={true}

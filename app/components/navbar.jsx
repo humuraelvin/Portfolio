@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { FaBars, FaDownload, FaTimes } from "react-icons/fa";
+import ThemeToggle from "./theme-toggle";
+import { useTheme } from "../context/ThemeContext";
 
 const navLinks = [
   { name: "Home", href: "/" },
@@ -12,6 +14,7 @@ const navLinks = [
   { name: "Skills", href: "#skills" },
   { name: "Projects", href: "#projects" },
   { name: "Experience", href: "#experience" },
+  { name: "Testimonials", href: "#testimonials" },
   { name: "Education", href: "#education" },
   { name: "Contact", href: "#contact" },
 ];
@@ -19,6 +22,8 @@ const navLinks = [
 const NavBar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
@@ -69,7 +74,9 @@ const NavBar = () => {
         transition={{ duration: 0.5 }}
         className={`fixed top-0 left-0 right-0 z-50 ${
           scrolled 
+            ? isDark 
             ? "bg-dark-darker/90 backdrop-blur-xl shadow-lg" 
+              : "bg-light-darker/90 backdrop-blur-xl shadow-lg"
             : "bg-transparent"
         } transition-all duration-300`}
       >
@@ -83,7 +90,7 @@ const NavBar = () => {
                 className="text-xl sm:text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary"
               >
                 {personalData.name.split(' ')[0]}
-                <span className="text-white">.</span>
+                <span className="text-[rgb(var(--foreground-rgb))]">.</span>
               </motion.span>
             </Link>
 
@@ -98,7 +105,7 @@ const NavBar = () => {
                 >
                   <Link 
                     href={link.href}
-                    className="px-3 py-2 text-sm xl:text-base xl:px-4 text-gray-300 hover:text-white transition-colors duration-300"
+                    className={`px-3 py-2 text-sm xl:text-base xl:px-4 ${isDark ? 'text-gray-300 hover:text-white' : 'text-gray-700 hover:text-gray-900'} transition-colors duration-300`}
                   >
                     {link.name}
                   </Link>
@@ -108,7 +115,9 @@ const NavBar = () => {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: navLinks.length * 0.1 }}
+                className="flex items-center gap-2"
               >
+                <ThemeToggle />
                 <Link 
                   href={personalData.resume} 
                   target="_blank"
@@ -120,12 +129,13 @@ const NavBar = () => {
               </motion.div>
             </div>
 
-            {/* Mobile Menu Button */}
-            <div className="lg:hidden z-50 relative">
+            {/* Mobile Menu Button and Theme Toggle */}
+            <div className="lg:hidden z-50 relative flex items-center gap-2">
+              <ThemeToggle />
               <button
                 onClick={toggleMobileMenu}
                 aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
-                className="p-2 rounded-lg bg-dark-lighter text-white focus:outline-none hover:bg-primary/80 transition-colors duration-300"
+                className={`p-2 rounded-lg ${isDark ? 'bg-dark-lighter' : 'bg-light-darker'} text-[rgb(var(--foreground-rgb))] focus:outline-none hover:bg-primary/80 transition-colors duration-300`}
               >
                 {mobileMenuOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
               </button>
@@ -144,7 +154,7 @@ const NavBar = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
         transition={{ duration: 0.3 }}
-              className="fixed inset-0 bg-dark-darker/70 backdrop-blur-lg z-40 lg:hidden"
+              className={`fixed inset-0 ${isDark ? 'bg-dark-darker/70' : 'bg-light-darker/70'} backdrop-blur-lg z-40 lg:hidden`}
               onClick={() => setMobileMenuOpen(false)}
             />
             
@@ -154,13 +164,13 @@ const NavBar = () => {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "tween", duration: 0.3 }}
-              className="fixed top-0 right-0 bottom-0 w-4/5 max-w-sm bg-dark-darker/95 backdrop-blur-lg z-50 lg:hidden shadow-xl"
+              className={`fixed top-0 right-0 bottom-0 w-4/5 max-w-sm ${isDark ? 'bg-dark-darker/95' : 'bg-light-darker/95'} backdrop-blur-lg z-50 lg:hidden shadow-xl`}
             >
               {/* Close button inside sidebar */}
               <button
                 onClick={() => setMobileMenuOpen(false)}
                 aria-label="Close menu"
-                className="absolute top-6 right-6 p-2 rounded-full bg-dark-lighter text-white hover:bg-primary/80 transition-colors duration-300"
+                className={`absolute top-6 right-6 p-2 rounded-full ${isDark ? 'bg-dark-lighter' : 'bg-light-darker'} text-[rgb(var(--foreground-rgb))] hover:bg-primary/80 transition-colors duration-300`}
               >
                 <FaTimes size={18} />
               </button>
@@ -178,7 +188,7 @@ const NavBar = () => {
                         <Link
                           href={link.href}
                           onClick={() => setMobileMenuOpen(false)}
-                          className="block px-4 py-3 text-lg font-medium text-gray-300 hover:text-white hover:bg-dark-lighter rounded-lg transition-colors duration-200"
+                          className={`block px-4 py-3 text-lg font-medium ${isDark ? 'text-gray-300 hover:text-white hover:bg-dark-lighter' : 'text-gray-700 hover:text-gray-900 hover:bg-light-darker'} rounded-lg transition-colors duration-200`}
               >
                 {link.name}
               </Link>
@@ -209,7 +219,7 @@ const NavBar = () => {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.4 }}
-                    className="text-sm text-gray-400 text-center"
+                    className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'} text-center`}
                   >
                     &copy; {new Date().getFullYear()} {personalData.name}
                   </motion.div>

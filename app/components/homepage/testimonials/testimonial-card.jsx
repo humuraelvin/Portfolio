@@ -4,8 +4,12 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { FaQuoteLeft } from "react-icons/fa";
 import { HiStar } from "react-icons/hi";
+import { useTheme } from "@/app/context/ThemeContext";
 
 const TestimonialCard = ({ testimonial, isActive }) => {
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
+
   return (
     <motion.div
       className="absolute inset-0"
@@ -54,16 +58,16 @@ const TestimonialCard = ({ testimonial, isActive }) => {
           <div className="flex flex-col justify-between flex-grow">
             <div>
               <FaQuoteLeft className="text-primary mb-2 sm:mb-3 w-5 h-5 sm:w-6 sm:h-6 opacity-60" />
-              <p className="text-gray-200 text-xs sm:text-sm md:text-base mb-4 sm:mb-6 italic leading-relaxed">
+              <p className={`${isDark ? 'text-gray-200' : 'text-gray-800'} text-xs sm:text-sm md:text-base mb-4 sm:mb-6 italic leading-relaxed`}>
                 &ldquo;{testimonial.testimonial}&rdquo;
               </p>
             </div>
             
             <div>
-              <h4 className="font-semibold text-white text-sm sm:text-base md:text-lg">
+              <h4 className={`font-semibold ${isDark ? 'text-white' : 'text-gray-900'} text-sm sm:text-base md:text-lg`}>
                 {testimonial.name}
               </h4>
-              <p className="text-gray-400 text-xs sm:text-sm">
+              <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'} text-xs sm:text-sm`}>
                 {testimonial.position}
               </p>
             </div>

@@ -8,8 +8,14 @@ import lottieFile from '../../../assets/lottie/study.json';
 import AnimationLottie from "../../helper/animation-lottie";
 import GlowCard from "../../helper/glow-card";
 import ScrollReveal from "../../helper/scroll-reveal";
+import { useTheme } from "@/app/context/ThemeContext";
+import { FaGraduationCap } from "react-icons/fa";
+import { educationData } from "@/utils/data/education-data";
 
 function Education() {
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
+
   return (
     <div id="education" className="relative py-20 lg:py-32">
       {/* Background decorations */}
@@ -27,7 +33,7 @@ function Education() {
                 Education
               </span>
             </h2>
-            <p className="text-gray-400 max-w-2xl mx-auto">
+            <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'} max-w-2xl mx-auto`}>
               My academic journey and qualifications that have shaped my professional path
             </p>
           </div>
@@ -40,36 +46,49 @@ function Education() {
             </div>
           </ScrollReveal>
 
-          <div className="space-y-6">
-            {educations.map((education, index) => (
-              <ScrollReveal 
-                key={education.id} 
-                direction="right" 
-                delay={index * 0.1}
-              >
-                <div className="glass-card p-0.5">
-                  <div className="bg-dark-lighter p-6 rounded-xl">
-                    <div className="flex justify-between items-start mb-4">
+          <ScrollReveal direction="right">
+            <div className="space-y-8">
+              {educationData.map((item, index) => (
+                <motion.div 
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                  className={`relative pl-8 ${index !== educationData.length - 1 ? 'pb-8' : ''}`}
+                >
+                  {/* Timeline connector */}
+                  {index !== educationData.length - 1 && (
+                    <div className="absolute left-3.5 top-8 bottom-0 w-0.5 bg-primary/30"></div>
+                  )}
+                  
+                  {/* Timeline dot */}
+                  <div className="absolute left-0 top-1 w-7 h-7 rounded-full bg-primary/20 flex items-center justify-center">
+                    <FaGraduationCap className="text-primary w-3.5 h-3.5" />
+                  </div>
+                  
                       <div>
-                        <h3 className="text-xl font-bold text-white">{education.title}</h3>
-                        <p className="text-gray-300">{education.institution}</p>
-                      </div>
-                      <span className="text-xs bg-primary/20 text-primary px-3 py-1 rounded-full">
-                        {education.duration}
+                    <div className="flex flex-wrap items-center justify-between gap-2 mb-1">
+                      <h3 className={`text-lg sm:text-xl font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                        {item.degree}
+                      </h3>
+                      <span className="text-xs sm:text-sm px-2 py-1 rounded-full bg-primary/10 text-primary font-medium">
+                        {item.period}
                       </span>
                     </div>
                     
-                    <div className="flex items-center gap-3">
-                      <div className="shrink-0 bg-primary/10 p-2 rounded-lg">
-                        <BsPersonWorkspace className="text-primary w-5 h-5" />
-                      </div>
-                      <p className="text-sm text-gray-400">{education.description || "Focused on computer science, software development, and problem-solving skills."}</p>
-                    </div>
+                    <h4 className={`text-sm sm:text-base font-medium mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                      {item.institution}
+                    </h4>
+                    
+                    <p className={`text-xs sm:text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                      {item.description}
+                    </p>
                   </div>
+                </motion.div>
+              ))}
                 </div>
               </ScrollReveal>
-            ))}
-          </div>
         </div>
       </div>
     </div>

@@ -4,28 +4,19 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { projectsData } from '@/utils/data/projects-data';
 import ProjectCard from './project-card';
-import { FaArrowRight, FaArrowUp } from 'react-icons/fa';
+import { FaArrowRight } from 'react-icons/fa';
+import { useTheme } from "@/app/context/ThemeContext";
 
 const Projects = () => {
   const [showAll, setShowAll] = useState(false);
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
   
-  // Get featured projects first, then the rest
+  // Display only featured projects initially, or all if showAll is true
   const featuredProjects = projectsData.filter(project => project.featured);
-  const regularProjects = projectsData.filter(project => !project.featured);
-  
-  // Decide which projects to display based on showAll state
   const projectsToDisplay = showAll 
-    ? [...featuredProjects, ...regularProjects]
-    : featuredProjects;
-
-  const handleToggleProjects = () => {
-    // Scroll to projects section when collapsing
-    if (showAll) {
-      const projectsSection = document.getElementById('projects');
-      projectsSection?.scrollIntoView({ behavior: 'smooth' });
-    }
-    setShowAll(!showAll);
-  };
+    ? projectsData 
+    : featuredProjects.slice(0, 6);
 
   return (
     <div id='projects' className="relative z-10 py-12 sm:py-16 md:py-20 lg:py-28">
@@ -42,7 +33,7 @@ const Projects = () => {
               {showAll ? "All Projects" : "Featured Projects"}
             </span>
           </h2>
-          <p className="text-gray-400 max-w-2xl mx-auto text-sm sm:text-base">
+          <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'} max-w-2xl mx-auto text-sm sm:text-base`}>
             Explore my portfolio of projects that showcase my skills and experience in software development, 
             from full-stack applications to specialized tools and interfaces.
           </p>
@@ -69,23 +60,29 @@ const Projects = () => {
           viewport={{ once: true }}
           className="mt-8 sm:mt-10 md:mt-12 text-center"
         >
-          {!showAll && projectsData.length > featuredProjects.length ? (
-            <button 
-              onClick={handleToggleProjects}
-              className="btn btn-outline group text-sm sm:text-base py-2 sm:py-2.5"
+          {!showAll && projectsData.length > 6 && (
+            <motion.button
+              onClick={() => setShowAll(true)}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className={`px-6 py-3 ${isDark ? 'bg-dark-lighter' : 'bg-light-darker'} rounded-lg text-primary hover:bg-primary/10 transition-colors duration-300 flex items-center gap-2 mx-auto`}
             >
-              View More Projects
-              <FaArrowRight className="text-sm sm:text-base transition-transform group-hover:translate-x-1" />
-            </button>
-          ) : showAll ? (
-            <button 
-              onClick={handleToggleProjects}
-              className="btn btn-outline group text-sm sm:text-base py-2 sm:py-2.5"
+              View All Projects
+              <FaArrowRight className="text-sm" />
+            </motion.button>
+          )}
+          
+          {showAll && (
+            <motion.button
+              onClick={() => setShowAll(false)}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className={`px-6 py-3 ${isDark ? 'bg-dark-lighter' : 'bg-light-darker'} rounded-lg text-primary hover:bg-primary/10 transition-colors duration-300 flex items-center gap-2 mx-auto`}
             >
-              View Featured Projects
-              <FaArrowUp className="text-sm sm:text-base transition-transform group-hover:-translate-y-1" />
-            </button>
-          ) : null}
+              Show Featured Only
+              <FaArrowRight className="text-sm rotate-180" />
+            </motion.button>
+          )}
         </motion.div>
       </div>
 

@@ -6,8 +6,11 @@ import { motion } from 'framer-motion';
 import { FaGithub } from 'react-icons/fa6';
 import { FiExternalLink } from 'react-icons/fi';
 import { useState } from 'react';
+import { useTheme } from "@/app/context/ThemeContext";
 
 function ProjectCard({ project }) {
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
   const [isHovered, setIsHovered] = useState(false);
   const [imageError, setImageError] = useState(false);
 
@@ -84,11 +87,11 @@ function ProjectCard({ project }) {
         </div>
         
         <div className="p-3 sm:p-4 flex-grow flex flex-col">
-          <h3 className="font-semibold text-sm sm:text-base md:text-lg text-white mb-1.5 sm:mb-2 truncate">
+          <h3 className={`font-semibold text-sm sm:text-base md:text-lg ${isDark ? 'text-white' : 'text-gray-900'} mb-1.5 sm:mb-2 truncate`}>
             {project.name}
           </h3>
           
-          <p className="text-gray-300 text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-3 flex-grow">
+          <p className={`${isDark ? 'text-gray-300' : 'text-gray-700'} text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-3 flex-grow`}>
             {project.description}
           </p>
           
@@ -96,13 +99,13 @@ function ProjectCard({ project }) {
             {project.tools.slice(0, 3).map((tool, index) => (
               <span 
                 key={index} 
-                className="text-[10px] sm:text-xs px-1.5 py-0.5 bg-dark-lighter text-gray-300 rounded"
+                className={`text-[10px] sm:text-xs px-1.5 py-0.5 ${isDark ? 'bg-dark-lighter text-gray-300' : 'bg-light-darker text-gray-700'} rounded`}
               >
                 {tool}
               </span>
             ))}
             {project.tools.length > 3 && (
-              <span className="text-[10px] sm:text-xs px-1.5 py-0.5 bg-dark-lighter text-gray-300 rounded">
+              <span className={`text-[10px] sm:text-xs px-1.5 py-0.5 ${isDark ? 'bg-dark-lighter text-gray-300' : 'bg-light-darker text-gray-700'} rounded`}>
                 +{project.tools.length - 3}
               </span>
             )}
@@ -113,7 +116,7 @@ function ProjectCard({ project }) {
               <Link 
                 href={project.code} 
                 target="_blank"
-                className="text-xs sm:text-sm flex items-center gap-1 text-gray-300 hover:text-primary transition-colors"
+                className={`text-xs sm:text-sm flex items-center gap-1 ${isDark ? 'text-gray-300' : 'text-gray-700'} hover:text-primary transition-colors`}
                 aria-label={`View ${project.name} source code`}
               >
                 <FaGithub className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
@@ -125,7 +128,7 @@ function ProjectCard({ project }) {
               <Link 
                 href={project.demo}
                 target="_blank" 
-                className="text-xs sm:text-sm flex items-center gap-1 text-gray-300 hover:text-primary transition-colors"
+                className={`text-xs sm:text-sm flex items-center gap-1 ${isDark ? 'text-gray-300' : 'text-gray-700'} hover:text-primary transition-colors`}
                 aria-label={`View ${project.name} live demo`}
               >
                 <FiExternalLink className="w-3.5 h-3.5 sm:w-4 sm:h-4" />

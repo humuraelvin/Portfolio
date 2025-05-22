@@ -3,6 +3,12 @@
 @tailwind utilities;
 
 :root {
+  --foreground-rgb: 17, 24, 39;
+  --background-start-rgb: 249, 250, 251;
+  --background-end-rgb: 243, 244, 246;
+}
+
+.dark {
   --foreground-rgb: 255, 255, 255;
   --background-start-rgb: 17, 24, 39;
   --background-end-rgb: 11, 15, 25;
@@ -71,7 +77,8 @@
   }
 
   .card {
-    @apply bg-dark-lighter rounded-xl shadow-elevation overflow-hidden transition-all duration-300;
+    @apply bg-dark-lighter rounded-xl shadow-elevation overflow-hidden transition-all duration-300 dark:bg-dark-lighter;
+    background-color: theme('colors.light.darker');
   }
 
   .section-title {
@@ -113,9 +120,17 @@
 }
 
 .glass-card {
-  @apply relative backdrop-blur-md bg-white/10 rounded-2xl overflow-hidden;
+  @apply relative backdrop-blur-md rounded-2xl overflow-hidden;
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
+  
+  .dark & {
+    @apply bg-white/10;
+  }
+  
+  .light & {
+    @apply bg-black/5;
+  }
 }
 
 .gradient-border {
@@ -148,6 +163,22 @@
   100% {
     background-position: 0% 50%;
   }
+}
+
+/* Profile image styling */
+.profile-image-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.profile-image {
+  transition: transform 0.5s ease;
+}
+
+.profile-image-container:hover .profile-image {
+  transform: scale(1.05);
 }
 
 .projects-grid {
@@ -192,12 +223,24 @@
 }
 
 .scrollbar-thin::-webkit-scrollbar-thumb {
+  .dark & {
   background: rgba(156, 163, 175, 0.5);
+  }
+  
+  .light & {
+    background: rgba(107, 114, 128, 0.5);
+  }
   border-radius: 2px;
 }
 
 .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  .dark & {
   background: rgba(156, 163, 175, 0.7);
+  }
+  
+  .light & {
+    background: rgba(107, 114, 128, 0.7);
+  }
 }
 
 /* Mobile touch optimizations */

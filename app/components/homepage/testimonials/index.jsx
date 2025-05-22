@@ -8,6 +8,7 @@ import { ScrollReveal } from "../../helper/scroll-reveal";
 import TestimonialCard from "./testimonial-card";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
+import { useTheme } from "@/app/context/ThemeContext";
 
 const Testimonials = () => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -15,6 +16,8 @@ const Testimonials = () => {
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
   const autoplayRef = useRef(null);
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
 
   // Setup autoplay functionality
   useEffect(() => {
@@ -96,7 +99,7 @@ const Testimonials = () => {
                 Client Testimonials
               </span>
             </h2>
-            <p className="text-gray-400 max-w-2xl mx-auto text-sm sm:text-base">
+            <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'} max-w-2xl mx-auto text-sm sm:text-base`}>
               Hear what others have to say about working with me on various projects and collaborations.
             </p>
           </div>
@@ -117,12 +120,12 @@ const Testimonials = () => {
 
           {/* Mobile swipe indicator - only shows initially */}
           <motion.div 
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 bg-dark-darker/70 rounded-xl px-3 py-2 sm:hidden"
+            className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 ${isDark ? 'bg-dark-darker/70' : 'bg-light-darker/70'} rounded-xl px-3 py-2 sm:hidden`}
             initial={{ opacity: 1 }}
             animate={{ opacity: 0 }}
             transition={{ delay: 2, duration: 1 }}
           >
-            <p className="text-white text-xs font-medium">Swipe to navigate</p>
+            <p className={`${isDark ? 'text-white' : 'text-gray-900'} text-xs font-medium`}>Swipe to navigate</p>
           </motion.div>
 
           {/* Testimonials slider */}
@@ -148,7 +151,7 @@ const Testimonials = () => {
                 className={`w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full transition-all duration-300 ${
                   index === activeIndex
                     ? "bg-primary w-6 sm:w-8"
-                    : "bg-gray-600 hover:bg-gray-500"
+                    : isDark ? "bg-gray-600 hover:bg-gray-500" : "bg-gray-400 hover:bg-gray-500"
                 }`}
                 aria-label={`Go to testimonial ${index + 1}`}
               />
@@ -159,17 +162,17 @@ const Testimonials = () => {
           <div className="flex justify-between mt-4 sm:hidden">
             <button
               onClick={goToPrev}
-              className="p-2 rounded-full bg-dark-lighter hover:bg-primary/20 transition-colors duration-300 active:scale-95"
+              className={`p-2 rounded-full ${isDark ? 'bg-dark-lighter' : 'bg-light-darker'} hover:bg-primary/20 transition-colors duration-300 active:scale-95`}
               aria-label="Previous testimonial"
             >
-              <HiChevronLeft className="w-6 h-6 text-white" />
+              <HiChevronLeft className={`w-6 h-6 ${isDark ? 'text-white' : 'text-gray-900'}`} />
             </button>
             <button
               onClick={goToNext}
-              className="p-2 rounded-full bg-dark-lighter hover:bg-primary/20 transition-colors duration-300 active:scale-95"
+              className={`p-2 rounded-full ${isDark ? 'bg-dark-lighter' : 'bg-light-darker'} hover:bg-primary/20 transition-colors duration-300 active:scale-95`}
               aria-label="Next testimonial"
             >
-              <HiChevronRight className="w-6 h-6 text-white" />
+              <HiChevronRight className={`w-6 h-6 ${isDark ? 'text-white' : 'text-gray-900'}`} />
             </button>
           </div>
 
@@ -177,17 +180,17 @@ const Testimonials = () => {
           <div className="hidden sm:block">
             <button
               onClick={goToPrev}
-              className="absolute top-1/2 -left-6 md:-left-12 -translate-y-1/2 w-10 h-10 rounded-full bg-dark-lighter flex items-center justify-center hover:bg-primary/20 transition-colors duration-300"
+              className={`absolute top-1/2 -left-6 md:-left-12 -translate-y-1/2 w-10 h-10 rounded-full ${isDark ? 'bg-dark-lighter' : 'bg-light-darker'} flex items-center justify-center hover:bg-primary/20 transition-colors duration-300`}
               aria-label="Previous testimonial"
             >
-              <HiChevronLeft className="h-6 w-6 text-white" />
+              <HiChevronLeft className={`h-6 w-6 ${isDark ? 'text-white' : 'text-gray-900'}`} />
             </button>
             <button
               onClick={goToNext}
-              className="absolute top-1/2 -right-6 md:-right-12 -translate-y-1/2 w-10 h-10 rounded-full bg-dark-lighter flex items-center justify-center hover:bg-primary/20 transition-colors duration-300"
+              className={`absolute top-1/2 -right-6 md:-right-12 -translate-y-1/2 w-10 h-10 rounded-full ${isDark ? 'bg-dark-lighter' : 'bg-light-darker'} flex items-center justify-center hover:bg-primary/20 transition-colors duration-300`}
               aria-label="Next testimonial"
             >
-              <HiChevronRight className="h-6 w-6 text-white" />
+              <HiChevronRight className={`h-6 w-6 ${isDark ? 'text-white' : 'text-gray-900'}`} />
             </button>
           </div>
         </div>

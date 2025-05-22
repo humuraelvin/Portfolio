@@ -5,6 +5,7 @@ import ToastContainerWrapper from "./components/helper/toast-container";
 import ScrollToTop from "./components/helper/scroll-to-top";
 import Navbar from "./components/navbar";
 import Providers from "./providers";
+import FloatingThemeToggle from "./components/floating-theme-toggle";
 import "./css/card.scss";
 import "./css/globals.scss";
 const inter = Inter({ subsets: ["latin"] });
@@ -24,13 +25,14 @@ export const viewport = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className={inter.className}>
+      <body className={`${inter.className} transition-colors duration-500`}>
         <ToastContainerWrapper />
         <Providers>
-          <main className="min-h-screen relative mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 max-w-[100rem] text-white overflow-hidden">
+          <main className="min-h-screen relative mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 max-w-[100rem] text-[rgb(var(--foreground-rgb))] overflow-hidden">
             <Navbar />
             {children}
             <ScrollToTop />
+            <FloatingThemeToggle />
           </main>
           <Footer />
         </Providers>
