@@ -143,4 +143,15 @@ export const projectsData = [
         code: 'https://github.com/humuraelvin/NexaSecurity',
         demo: '',
     },
+    {
+        id: 15,
+        name: 'Portfolio Website',
+        description: 'My personal portfolio website built with Next.js, React, and TailwindCSS. Showcases my projects, skills, and experience with a modern, responsive design.',
+        tools: ['Next.js', 'React', 'TailwindCSS', 'Framer Motion', 'SCSS'],
+        role: 'Frontend Developer',
+        image: 'data:image/svg+xml,%3Csvg width="1200" height="630" xmlns="http://www.w3.org/2000/svg"%3E%3Cdefs%3E%3ClinearGradient id="gradient" x1="0%25" y1="0%25" x2="100%25" y2="100%25"%3E%3Cstop offset="0%25" stop-color="%238b5cf6"/%3E%3Cstop offset="100%25" stop-color="%232563eb"/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width="100%25" height="100%25" fill="url(%23gradient)"/%3E%3Ctext x="50%25" y="50%25" font-family="Arial" font-size="72" text-anchor="middle" fill="white"%3EPortfolio%3C/text%3E%3C/svg%3E',
+        featured: false,
+        code: 'https://github.com/humuraelvin/Portfolio',
+        demo: '',
+    },
 ];
