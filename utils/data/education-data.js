@@ -8,7 +8,7 @@ export const educationData = [
   },
   {
     id: 2,
-    degree: "Advanced Level Certificate",
+    degree: "Ordinary Level Certificate",
     period: "2020-2023",
     institution: "Ecole Des Sciences Byimana",
     description: "Completed secondary education with a focus on science and mathematics, laying the foundation for my programming journey."
