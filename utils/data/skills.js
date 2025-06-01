@@ -21,6 +21,7 @@ export const skillsData = [
   'Python',
   'Django',
   'Java',
+  'Spring Boot',
   'PHP',
   'Figma',
   'Firebase',
