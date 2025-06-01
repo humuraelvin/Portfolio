@@ -37,19 +37,30 @@ function ContactForm() {
 
     try {
       setIsLoading(true);
+      
+      // Get the base URL, defaulting to the current origin if NEXT_PUBLIC_APP_URL is not defined
+      const baseUrl = typeof window !== 'undefined' 
+        ? window.location.origin 
+        : process.env.NEXT_PUBLIC_APP_URL || '';
+      
+      // Log for debugging
+      console.log('Sending message to:', `${baseUrl}/api/contact`);
+      
       const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_APP_URL}/api/contact`,
+        `${baseUrl}/api/contact`,
         userInput
       );
 
-      toast.success("Message sent successfully!");
+      toast.success("Message sent successfully! I'll get back to you soon.");
       setUserInput({
         name: "",
         email: "",
         message: "",
       });
     } catch (error) {
-      toast.error(error?.response?.data?.message);
+      console.error('Contact form error:', error);
+      const errorMessage = error?.response?.data?.message || error?.response?.data?.error || "Failed to send message. Please try again later.";
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     };
