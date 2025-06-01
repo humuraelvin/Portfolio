@@ -179,6 +179,19 @@ const ChatBot = () => {
       return "I'm an AI assistant for Elvin Humura's portfolio website. I'm designed to provide detailed information about Elvin's professional background, skills, projects, education, and personal interests. Feel free to ask me anything about Elvin!";
     }
     
+    // Check for non-personal queries (math, general knowledge, etc.)
+    else if (message.includes('sin(') || message.includes('cos(') || message.includes('tan(') || 
+             message.includes('calculate') || message.includes('what is') || message.includes('how to') || 
+             message.includes('define') || message.includes('meaning of') || message.includes('weather') || 
+             message.includes('news') || message.includes('recipe') || message.includes('history') || 
+             message.includes('math') || message.includes('science') || message.includes('politics') || 
+             message.includes('movie') || message.includes('music') || message.includes('song')) {
+      console.log('Matched non-personal query');
+      return `I'm specifically designed to provide information about Elvin Humura only. I can't answer general knowledge questions, perform calculations, or provide information unrelated to Elvin.
+
+I'd be happy to tell you about Elvin's skills, projects, education, work experience, hobbies, or favorite football clubs (Barcelona and Arsenal). Please feel free to ask about any aspect of Elvin's background or professional life.`;
+    }
+    
     // Fallback with suggestions
     else {
       console.log('No match found, using fallback');

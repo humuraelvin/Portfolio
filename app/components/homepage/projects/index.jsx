@@ -7,7 +7,7 @@ import ProjectCard from './project-card';
 import { FaArrowRight } from 'react-icons/fa';
 import { useTheme } from "@/app/context/ThemeContext";
 
-const Projects = () => {
+const Projects = ({ blogs = [] }) => {
   const [showAll, setShowAll] = useState(false);
   const { theme } = useTheme();
   const isDark = theme === "dark";

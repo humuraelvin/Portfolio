@@ -9,21 +9,35 @@ import Testimonials from "./components/homepage/testimonials";
 import SkillsWrapper from "./components/homepage/skills-wrapper";
 
 async function getData() {
-  const res = await fetch(`https://dev.to/api/articles?username=${personalData.devUsername}`)
+  try {
+    const res = await fetch(`https://dev.to/api/articles?username=${personalData.devUsername}`, {
+      next: { revalidate: 3600 }, // Cache for 1 hour
+      headers: {
+        'Accept': 'application/json',
+        'User-Agent': 'Portfolio Website (https://elvinhumura.com)'
+      }
+    });
 
-  if (!res.ok) {
-    throw new Error('Failed to fetch data')
+    if (!res.ok) {
+      console.error('Dev.to API response not OK:', res.status, res.statusText);
+      return []; // Return empty array instead of throwing
+    }
+
+    const data = await res.json();
+    const filtered = data.filter((item) => item?.cover_image).sort(() => Math.random() - 0.5);
+    return filtered;
+  } catch (error) {
+    console.error('Error fetching from Dev.to API:', error.message);
+    return []; // Return empty array on any error
   }
-
-  const data = await res.json();
-
-  const filtered = data.filter((item) => item?.cover_image).sort(() => Math.random() - 0.5);
-
-  return filtered;
 };
 
 export default async function Home() {
-  const blogs = await getData();
+  // Fetch blogs but don't let it break the page if it fails
+  const blogs = await getData().catch(error => {
+    console.error('Error in getData:', error);
+    return [];
+  });
 
   return (
     <div suppressHydrationWarning >
@@ -31,7 +45,7 @@ export default async function Home() {
       <AboutSection />
       <Experience />
       <SkillsWrapper />
-      <Projects />
+      <Projects blogs={blogs} />
       <Testimonials />
       <Education />
       <ContactSection />
