@@ -1,4 +1,6 @@
 export const projectsData = [
+    // 1
+
     {
         id: 1,
         name: 'Crime Reporting System',
@@ -45,12 +47,13 @@ export const projectsData = [
     },
     {
         id: 5,
-        name: 'Library Management System',
-        description: 'A PHP-based web application to manage library operations efficiently. Includes functionalities like book tracking, user registrations, and borrow/return management. Designed with an intuitive HTML/CSS/JavaScript front end and a robust PHP back end.',
-        tools: ['PHP', 'HTML', 'CSS', 'JavaScript', 'MySQL'],
-        role: 'Backend Developer',
-        image: 'data:image/svg+xml,%3Csvg width="1200" height="630" xmlns="http://www.w3.org/2000/svg"%3E%3Cdefs%3E%3ClinearGradient id="gradient" x1="0%25" y1="0%25" x2="100%25" y2="100%25"%3E%3Cstop offset="0%25" stop-color="%230369a1"/%3E%3Cstop offset="100%25" stop-color="%231e40af"/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width="100%25" height="100%25" fill="url(%23gradient)"%3E%3C/rect%3E%3Ctext x="50%25" y="50%25" font-family="Arial" font-size="72" text-anchor="middle" fill="white"%3ELibrary Management%3C/text%3E%3C/svg%3E',
-        code: 'https://github.com/humuraelvin/RCA_LBS_php',
+        name: 'NexaSecurity',
+        description: 'A modern cyber security solution for advanced network defense, penetration testing, and real-time threat monitoring. Built for both professionals and learners, it features a sleek UI and powerful backend for seamless security operations.',
+        tools: ['Python', 'TypeScript', 'TailwindCSS', 'JavaScript', 'Node.js'],
+        role: 'Cybersecurity Developer',
+        image: 'data:image/svg+xml,%3Csvg width="1200" height="630" xmlns="http://www.w3.org/2000/svg"%3E%3Cdefs%3E%3ClinearGradient id="gradient" x1="0%25" y1="0%25" x2="100%25" y2="100%25"%3E%3Cstop offset="0%25" stop-color="%237c3aed"/%3E%3Cstop offset="100%25" stop-color="%2310b981"/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width="100%25" height="100%25" fill="url(%23gradient)"/%3E%3Ctext x="50%25" y="50%25" font-family="Arial" font-size="72" text-anchor="middle" fill="white"%3ENexaSecurity%3C/text%3E%3C/svg%3E',
+        featured: true,
+        code: 'https://github.com/humuraelvin/NexaSecurity',
         demo: '',
     },
     {
@@ -134,13 +137,12 @@ export const projectsData = [
     },
     {
         id: 14,
-        name: 'NexaSecurity',
-        description: 'A modern cyber security solution for advanced network defense, penetration testing, and real-time threat monitoring. Built for both professionals and learners, it features a sleek UI and powerful backend for seamless security operations.',
-        tools: ['Python', 'TypeScript', 'TailwindCSS', 'JavaScript', 'Node.js'],
-        role: 'Cybersecurity Developer',
-        image: 'data:image/svg+xml,%3Csvg width="1200" height="630" xmlns="http://www.w3.org/2000/svg"%3E%3Cdefs%3E%3ClinearGradient id="gradient" x1="0%25" y1="0%25" x2="100%25" y2="100%25"%3E%3Cstop offset="0%25" stop-color="%237c3aed"/%3E%3Cstop offset="100%25" stop-color="%2310b981"/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width="100%25" height="100%25" fill="url(%23gradient)"/%3E%3Ctext x="50%25" y="50%25" font-family="Arial" font-size="72" text-anchor="middle" fill="white"%3ENexaSecurity%3C/text%3E%3C/svg%3E',
-        featured: true,
-        code: 'https://github.com/humuraelvin/NexaSecurity',
+        name: 'Library Management System',
+        description: 'A PHP-based web application to manage library operations efficiently. Includes functionalities like book tracking, user registrations, and borrow/return management. Designed with an intuitive HTML/CSS/JavaScript front end and a robust PHP back end.',
+        tools: ['PHP', 'HTML', 'CSS', 'JavaScript', 'MySQL'],
+        role: 'Backend Developer',
+        image: 'data:image/svg+xml,%3Csvg width="1200" height="630" xmlns="http://www.w3.org/2000/svg"%3E%3Cdefs%3E%3ClinearGradient id="gradient" x1="0%25" y1="0%25" x2="100%25" y2="100%25"%3E%3Cstop offset="0%25" stop-color="%230369a1"/%3E%3Cstop offset="100%25" stop-color="%231e40af"/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width="100%25" height="100%25" fill="url(%23gradient)"%3E%3C/rect%3E%3Ctext x="50%25" y="50%25" font-family="Arial" font-size="72" text-anchor="middle" fill="white"%3ELibrary Management%3C/text%3E%3C/svg%3E',
+        code: 'https://github.com/humuraelvin/RCA_LBS_php',
         demo: '',
     },
     {
@@ -154,4 +156,16 @@ export const projectsData = [
         code: 'https://github.com/humuraelvin/Portfolio',
         demo: '',
     },
+    // 16
+    {
+        id: 16,
+        name: 'Smart Voting System',
+        description: 'A decentralized smart voting platform leveraging Ethereum blockchain for secure and transparent elections. Built with Solidity smart contracts and a TypeScript-powered frontend, it enables tamper-proof voting, real-time result tallying, and voter privacy. The system is designed for transparency, security, and ease of use for both administrators and voters.',
+        tools: ['Ethereum', 'Solidity', 'TypeScript', 'Blockchain', 'Web3'],
+        role: 'Blockchain Developer',
+        image: 'data:image/svg+xml,%3Csvg width="1200" height="630" xmlns="http://www.w3.org/2000/svg"%3E%3Cdefs%3E%3ClinearGradient id="gradient" x1="0%25" y1="0%25" x2="100%25" y2="100%25"%3E%3Cstop offset="0%25" stop-color="%236b7280"/%3E%3Cstop offset="100%25" stop-color="%232563eb"/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width="100%25" height="100%25" fill="url(%23gradient)"/%3E%3Ctext x="50%25" y="50%25" font-family="Arial" font-size="64" text-anchor="middle" fill="white" dy=".3em"%3ESmart Voting System%3C/text%3E%3C/svg%3E',
+        featured: false,
+        code: 'https://github.com/humuraelvin/Smart-Voting-System',
+        demo: '',
+    }
 ];
