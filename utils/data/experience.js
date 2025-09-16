@@ -1,15 +1,15 @@
 export const experiences = [
   {
     id: 1,
-    title: 'Software Engineer I',
-    company: "Pivot Access Ltd.",
-    duration: "(Jan 2026 - Present)"
+    title: 'Mobile and FullStack Developer',
+    company: "Echo Solutions Ltd.",
+    duration: "(Sept 2025 - Present)"
   },
   {
     id: 2,
     title: "FullStack Developer",
     company: "Discord (freelance)",
-    duration: "(Jun 2021 - Jan 2022)"
+    duration: "(Jun 2023 - Dec 2024)"
   },
   {
     id: 3,
