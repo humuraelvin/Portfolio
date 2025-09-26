@@ -20,14 +20,20 @@
     -webkit-tap-highlight-color: transparent;
   }
   
-  /* Hide default cursor */
-  * {
+  /* Show default cursor by default */
+  html {
+    cursor: auto;
+  }
+  
+  /* Hide default cursor when custom cursor is active */
+  body.cursor-hidden * {
     cursor: none !important;
   }
 
   /* Ensure cursor is visible on interactive elements */
   a, button, [role="button"], input, textarea, .interactive {
     position: relative;
+    cursor: pointer !important;
   }
 
   body {

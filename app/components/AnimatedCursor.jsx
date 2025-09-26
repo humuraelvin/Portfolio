@@ -15,6 +15,9 @@ export default function AnimatedCursor() {
   const cursorYSpring = useSpring(cursorY, springConfig);
 
   useEffect(() => {
+    // Add class to body to hide default cursor
+    document.body.classList.add('cursor-hidden');
+    
     const moveCursor = (e) => {
       cursorX.set(e.clientX - 16); // Half of cursor width
       cursorY.set(e.clientY - 16); // Half of cursor height
@@ -28,37 +31,52 @@ export default function AnimatedCursor() {
     window.addEventListener('mousemove', moveCursor);
     
     // Add hover effect for interactive elements
-    const interactiveElements = document.querySelectorAll(
-      'a, button, [role="button"], input, textarea, .interactive, .cursor-pointer'
-    );
+    const interactiveElements = [
+      ...document.querySelectorAll('a, button, [role="button"], input, textarea, .interactive, .cursor-pointer')
+    ];
 
     interactiveElements.forEach(element => {
+      element.style.cursor = 'none';
       element.addEventListener('mouseenter', handleMouseEnter);
       element.addEventListener('mouseleave', handleMouseLeave);
     });
 
+    // Make cursor visible after a short delay
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+    }, 100);
+
     return () => {
+      // Cleanup
+      document.body.classList.remove('cursor-hidden');
       window.removeEventListener('mousemove', moveCursor);
       interactiveElements.forEach(element => {
+        element.style.cursor = '';
         element.removeEventListener('mouseenter', handleMouseEnter);
         element.removeEventListener('mouseleave', handleMouseLeave);
       });
+      clearTimeout(timer);
     };
-  }, [cursorX, cursorY, isVisible]);
+  }, [cursorX, cursorY]);
+
+  // Don't render the cursor on mobile devices
+  if (typeof window !== 'undefined' && window.innerWidth < 768) {
+    return null;
+  }
 
   return (
     <motion.div
-      className={`fixed w-8 h-8 rounded-full pointer-events-none z-[9999] mix-blend-difference ${
-        isVisible ? 'opacity-100' : 'opacity-0'
-      } transition-opacity duration-300`}
+      className="fixed w-8 h-8 rounded-full pointer-events-none z-[9999] mix-blend-difference"
       style={{
         translateX: cursorXSpring,
         translateY: cursorYSpring,
-        scale: isHovered ? 2 : 1,
+        scale: isHovered ? 1.5 : 1,
         backgroundColor: isHovered ? 'rgba(99, 102, 241, 0.5)' : 'rgba(99, 102, 241, 0.2)',
         border: isHovered 
           ? '2px solid rgba(99, 102, 241, 1)' 
           : '2px solid rgba(99, 102, 241, 0.8)',
+        opacity: isVisible ? 1 : 0,
+        transition: 'opacity 0.3s ease, transform 0.1s ease, background-color 0.3s ease',
       }}
     >
       <motion.div 
