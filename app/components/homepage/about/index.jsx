@@ -2,8 +2,8 @@
 
 import { motion } from "framer-motion";
 import { useTheme } from "@/app/context/ThemeContext";
-import Image from "next/image";
 import { personalData } from "@/utils/data/personal-data";
+import AnimatedProfileIcons from "@/app/components/AnimatedProfileIcons";
 
 const AboutSection = () => {
   const { theme } = useTheme();
@@ -49,67 +49,7 @@ const AboutSection = () => {
             viewport={{ once: true }}
             className="relative"
           >
-            <div className="relative w-64 h-64 mx-auto mb-8">
-              <motion.div 
-                className="relative w-full h-full rounded-full overflow-hidden border-4 border-primary/30 shadow-lg"
-                whileHover={{ scale: 1.05 }}
-                transition={{ type: 'spring', stiffness: 400, damping: 10 }}
-              >
-                <Image 
-                  src="/image/profile.png"
-                  alt={personalData.name}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 16rem, 20rem"
-                  priority
-                />
-                <motion.div 
-                  className="absolute inset-0 rounded-full border-4 border-transparent"
-                  style={{
-                    borderImage: isDark 
-                      ? 'linear-gradient(45deg, #6366f1, #8b5cf6, #ec4899, #f43f5e) 1' 
-                      : 'linear-gradient(45deg, #3b82f6, #8b5cf6, #ec4899, #f59e0b) 1',
-                    borderImageSlice: 1,
-                  }}
-                  animate={{
-                    rotate: 360,
-                  }}
-                  transition={{
-                    rotate: {
-                      duration: 20,
-                      repeat: Infinity,
-                      ease: 'linear',
-                    }
-                  }}
-                />
-              </motion.div>
-              
-              {/* Floating elements */}
-              {[1, 2, 3, 4].map((i) => (
-                <motion.div
-                  key={i}
-                  className={`absolute rounded-full ${isDark ? 'bg-primary/20' : 'bg-secondary/20'}`}
-                  style={{
-                    width: 12 + i * 4,
-                    height: 12 + i * 4,
-                    top: `${Math.random() * 20 + 40}%`,
-                    left: `${Math.random() * 20 + 40}%`,
-                  }}
-                  animate={{
-                    y: [0, 15, 0],
-                    x: [0, 10, 0],
-                    scale: [1, 1.2, 1],
-                  }}
-                  transition={{
-                    duration: 4 + i,
-                    repeat: Infinity,
-                    repeatType: 'reverse',
-                    ease: 'easeInOut',
-                    delay: i * 0.5,
-                  }}
-                />
-              ))}
-            </div>
+            <AnimatedProfileIcons />
                 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6">
               {stats.map((stat, index) => (

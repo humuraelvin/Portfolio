@@ -1,87 +1,68 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useMotionValue, useSpring } from 'framer-motion';
 
 export default function AnimatedCursor() {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [cursorVariant, setCursorVariant] = useState('default');
+  const cursorX = useMotionValue(-100);
+  const cursorY = useMotionValue(-100);
   const [isHovered, setIsHovered] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+
+  // Smooth out the cursor movement with spring physics
+  const springConfig = { damping: 25, stiffness: 700, mass: 0.5 };
+  const cursorXSpring = useSpring(cursorX, springConfig);
+  const cursorYSpring = useSpring(cursorY, springConfig);
 
   useEffect(() => {
-    const mouseMove = (e) => {
-      setMousePosition({
-        x: e.clientX,
-        y: e.clientY
-      });
+    const moveCursor = (e) => {
+      cursorX.set(e.clientX - 16); // Half of cursor width
+      cursorY.set(e.clientY - 16); // Half of cursor height
+      if (!isVisible) setIsVisible(true);
     };
 
-    window.addEventListener('mousemove', mouseMove);
+    const handleMouseEnter = () => setIsHovered(true);
+    const handleMouseLeave = () => setIsHovered(false);
 
+    // Add event listeners
+    window.addEventListener('mousemove', moveCursor);
+    
     // Add hover effect for interactive elements
-    const interactiveElements = document.querySelectorAll('a, button, [role="button"], input, textarea, .interactive');
-    
-    const handleHoverStart = () => {
-      setIsHovered(true);
-      setCursorVariant('hover');
-    };
-    
-    const handleHoverEnd = () => {
-      setIsHovered(false);
-      setCursorVariant('default');
-    };
+    const interactiveElements = document.querySelectorAll(
+      'a, button, [role="button"], input, textarea, .interactive, .cursor-pointer'
+    );
 
     interactiveElements.forEach(element => {
-      element.addEventListener('mouseenter', handleHoverStart);
-      element.addEventListener('mouseleave', handleHoverEnd);
+      element.addEventListener('mouseenter', handleMouseEnter);
+      element.addEventListener('mouseleave', handleMouseLeave);
     });
 
     return () => {
-      window.removeEventListener('mousemove', mouseMove);
+      window.removeEventListener('mousemove', moveCursor);
       interactiveElements.forEach(element => {
-        element.removeEventListener('mouseenter', handleHoverStart);
-        element.removeEventListener('mouseleave', handleHoverEnd);
+        element.removeEventListener('mouseenter', handleMouseEnter);
+        element.removeEventListener('mouseleave', handleMouseLeave);
       });
     };
-  }, []);
-
-  const variants = {
-    default: {
-      x: mousePosition.x - 15,
-      y: mousePosition.y - 15,
-      scale: 1,
-      backgroundColor: 'rgba(99, 102, 241, 0.2)',
-      border: '2px solid rgba(99, 102, 241, 0.8)',
-      transition: {
-        type: 'spring',
-        mass: 0.1,
-        damping: 20,
-        stiffness: 300,
-      },
-    },
-    hover: {
-      x: mousePosition.x - 25,
-      y: mousePosition.y - 25,
-      scale: 1.5,
-      backgroundColor: 'rgba(99, 102, 241, 0.4)',
-      border: '2px solid rgba(99, 102, 241, 1)',
-    },
-  };
+  }, [cursorX, cursorY, isVisible]);
 
   return (
     <motion.div
-      className="fixed w-8 h-8 rounded-full pointer-events-none z-50 mix-blend-difference"
-      variants={variants}
-      animate={cursorVariant}
-      transition={{
-        type: 'spring',
-        mass: 0.1,
-        damping: 20,
-        stiffness: 300,
+      className={`fixed w-8 h-8 rounded-full pointer-events-none z-[9999] mix-blend-difference ${
+        isVisible ? 'opacity-100' : 'opacity-0'
+      } transition-opacity duration-300`}
+      style={{
+        translateX: cursorXSpring,
+        translateY: cursorYSpring,
+        scale: isHovered ? 2 : 1,
+        backgroundColor: isHovered ? 'rgba(99, 102, 241, 0.5)' : 'rgba(99, 102, 241, 0.2)',
+        border: isHovered 
+          ? '2px solid rgba(99, 102, 241, 1)' 
+          : '2px solid rgba(99, 102, 241, 0.8)',
       }}
     >
       <motion.div 
-        className="w-full h-full rounded-full"
+        className="w-full h-full rounded-full flex items-center justify-center"
         animate={{
           scale: [1, 1.2, 0.9, 1.1, 1],
           rotate: [0, 10, -10, 10, 0],
@@ -93,7 +74,11 @@ export default function AnimatedCursor() {
           repeat: Infinity,
           repeatType: "loop"
         }}
-      />
+      >
+        {isHovered && (
+          <div className="w-2 h-2 bg-white rounded-full"></div>
+        )}
+      </motion.div>
     </motion.div>
   );
 }
