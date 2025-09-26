@@ -7,6 +7,7 @@ import Navbar from "./components/navbar";
 import Providers from "./providers";
 import FloatingThemeToggle from "./components/floating-theme-toggle";
 import ClientChatBot from "./components/chatbot/ClientChatBot";
+import AnimatedCursor from "./components/AnimatedCursor";
 import "./css/card.scss";
 import "./css/globals.scss";
 const inter = Inter({ subsets: ["latin"] });
@@ -37,6 +38,7 @@ export default function RootLayout({ children }) {
             <ClientChatBot />
           </main>
           <Footer />
+          <AnimatedCursor />
         </Providers>
       </body>
       <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM} />

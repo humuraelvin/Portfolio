@@ -20,6 +20,16 @@
     -webkit-tap-highlight-color: transparent;
   }
   
+  /* Hide default cursor */
+  * {
+    cursor: none !important;
+  }
+
+  /* Ensure cursor is visible on interactive elements */
+  a, button, [role="button"], input, textarea, .interactive {
+    position: relative;
+  }
+
   body {
     color: rgb(var(--foreground-rgb));
     background: linear-gradient(
@@ -30,6 +40,7 @@
     rgb(var(--background-start-rgb));
     overflow-x: hidden;
     touch-action: manipulation;
+    min-height: 100vh;
   }
 
   h1, h2, h3, h4, h5, h6 {
