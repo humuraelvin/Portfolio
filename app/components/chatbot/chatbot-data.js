@@ -111,7 +111,7 @@ Elvin's professional journey reflects his passion for creating high-quality soft
 
   contact: `You can reach out to Elvin through multiple channels:
 
-- Email: humura53@gmail.com (preferred for professional inquiries and collaboration opportunities)
+- Email: elvinhumura@gmail.com (preferred for professional inquiries and collaboration opportunities)
 - Contact Form: The dedicated contact form on this website ensures your message reaches him directly with proper formatting and details
 - LinkedIn: Connect professionally through LinkedIn for networking and career discussions (link available in the footer)
 - GitHub: Follow his code repositories and contributions on GitHub (link available in the footer)

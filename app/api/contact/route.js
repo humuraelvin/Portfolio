@@ -68,7 +68,7 @@ export async function POST(request) {
     // Send email
     const mailOptions = {
       from: `"Portfolio Contact" <${process.env.EMAIL_ADDRESS}>`,
-      to: process.env.EMAIL_ADDRESS,
+      to: "elvinhumura@gmail.com",
       subject: `New Portfolio Message from ${name}`,
       html: generateEmailTemplate(name, email, message),
       replyTo: email,
