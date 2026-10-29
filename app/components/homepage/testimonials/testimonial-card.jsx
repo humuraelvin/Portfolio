@@ -1,81 +1,40 @@
 "use client";
 
-import Image from "next/image";
 import { motion } from "framer-motion";
-import { FaQuoteLeft } from "react-icons/fa";
-import { HiStar } from "react-icons/hi";
-import { useTheme } from "@/app/context/ThemeContext";
+import { FaQuoteLeft } from "react-icons/fa6";
 
-const TestimonialCard = ({ testimonial, isActive }) => {
-  const { theme } = useTheme();
-  const isDark = theme === "dark";
+const initials = (name) =>
+  name
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((n) => n[0].toUpperCase())
+    .join("");
 
+const TestimonialCard = ({ testimonial, index = 0 }) => {
   return (
-    <motion.div
-      className="absolute inset-0"
-      initial={{ opacity: 0, x: 100 }}
-      animate={{
-        opacity: isActive ? 1 : 0,
-        x: isActive ? 0 : 100,
-        scale: isActive ? 1 : 0.9,
-      }}
-      transition={{
-        opacity: { duration: 0.5 },
-        x: { duration: 0.5 },
-        scale: { duration: 0.5 },
-      }}
+    <motion.figure
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-20px" }}
+      transition={{ duration: 0.6, delay: index * 0.07, ease: [0.22, 1, 0.36, 1] }}
+      className="card-surface flex h-full flex-col p-6 sm:p-8"
     >
-      <div className="glass-card rounded-2xl p-5 sm:p-6 md:p-8 h-full shadow-lg">
-        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 h-full">
-          {/* Avatar and rating for mobile - top aligned */}
-          <div className="flex-shrink-0 flex flex-col items-center sm:block">
-            <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 relative rounded-full mb-3 overflow-hidden">
-              <Image
-                src={testimonial.avatar}
-                alt={testimonial.name}
-                fill
-                sizes="(max-width: 640px) 64px, (max-width: 768px) 80px, 96px"
-                className="object-cover"
-                priority
-              />
-              <motion.div 
-                className="absolute inset-0 ring-2 ring-primary/30 rounded-full"
-                animate={{ 
-                  boxShadow: isActive 
-                    ? "0 0 15px rgba(59, 130, 246, 0.5)"
-                    : "0 0 0px rgba(59, 130, 246, 0)"
-                }}
-                transition={{ duration: 1, repeat: Infinity, repeatType: "reverse" }}
-              />
-            </div>
-            <div className="flex gap-0.5 sm:gap-1 mb-2">
-              {[...Array(testimonial.rating)].map((_, i) => (
-                <HiStar key={i} className="text-yellow-400 w-3 h-3 sm:w-4 sm:h-4" />
-              ))}
-            </div>
-          </div>
-          
-          <div className="flex flex-col justify-between flex-grow">
-            <div>
-              <FaQuoteLeft className="text-primary mb-2 sm:mb-3 w-5 h-5 sm:w-6 sm:h-6 opacity-60" />
-              <p className={`${isDark ? 'text-gray-200' : 'text-gray-800'} text-xs sm:text-sm md:text-base mb-4 sm:mb-6 italic leading-relaxed`}>
-                &ldquo;{testimonial.testimonial}&rdquo;
-              </p>
-            </div>
-            
-            <div>
-              <h4 className={`font-semibold ${isDark ? 'text-white' : 'text-gray-900'} text-sm sm:text-base md:text-lg`}>
-                {testimonial.name}
-              </h4>
-              <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'} text-xs sm:text-sm`}>
-                {testimonial.position}
-              </p>
-            </div>
-          </div>
+      <FaQuoteLeft className="text-fg/30" size={20} />
+      <blockquote className="mt-5 flex-1 text-base leading-relaxed text-fg/90">
+        &ldquo;{testimonial.testimonial}&rdquo;
+      </blockquote>
+      <figcaption className="mt-8 flex items-center gap-4 border-t border-line pt-5">
+        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-fg font-display text-sm font-semibold text-bg">
+          {initials(testimonial.name)}
+        </span>
+        <div>
+          <p className="font-display text-sm font-semibold">{testimonial.name}</p>
+          <p className="text-xs text-muted">{testimonial.position}</p>
         </div>
-      </div>
-    </motion.div>
+      </figcaption>
+    </motion.figure>
   );
 };
 
-export default TestimonialCard; 
+export default TestimonialCard;

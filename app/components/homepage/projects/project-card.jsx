@@ -1,144 +1,77 @@
 "use client";
 
-import Image from 'next/image';
-import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { FaGithub } from 'react-icons/fa6';
-import { FiExternalLink } from 'react-icons/fi';
-import { useState } from 'react';
-import { useTheme } from "@/app/context/ThemeContext";
+import { motion } from "framer-motion";
+import { FaGithub, FaGooglePlay } from "react-icons/fa6";
+import { FiArrowUpRight } from "react-icons/fi";
+import ProjectCover from "./project-cover";
 
-function ProjectCard({ project }) {
-  const { theme } = useTheme();
-  const isDark = theme === "dark";
-  const [isHovered, setIsHovered] = useState(false);
-  const [imageError, setImageError] = useState(false);
+const ease = [0.22, 1, 0.36, 1];
 
-  // Generate a project-specific placeholder with the project name
-  const getProjectPlaceholder = (project) => {
-    // Return placeholder with project name
-    const svg = `
-      <svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#2563eb" />
-            <stop offset="100%" stop-color="${project.id % 2 === 0 ? '#10b981' : '#8b5cf6'}" />
-          </linearGradient>
-          <filter id="noise" x="0%" y="0%" width="100%" height="100%">
-            <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/>
-            <feColorMatrix type="saturate" values="0"/>
-            <feBlend in="SourceGraphic" mode="multiply"/>
-          </filter>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#gradient)"/>
-        <rect width="100%" height="100%" filter="url(#noise)" opacity="0.1"/>
-        <text x="50%" y="50%" font-family="Arial" font-size="42" text-anchor="middle" fill="white">${project.name}</text>
-      </svg>
-    `;
-    
-    // Convert SVG to data URL with proper encoding
-    return `data:image/svg+xml,${encodeURIComponent(svg)}`;
-  };
-  
-  // Use image if available, otherwise use placeholder
-  const placeholderImage = getProjectPlaceholder(project);
-  const imageSrc = imageError || !project.image ? placeholderImage : project.image;
-  
+function ProjectCard({ project, index, large = false }) {
+  const links = [
+    project.playstore && { label: "Play Store", icon: <FaGooglePlay size={13} />, href: project.playstore, primary: true },
+    project.demo && { label: "Live", icon: <FiArrowUpRight size={14} />, href: project.demo, primary: !project.playstore },
+    project.code && { label: "Code", icon: <FaGithub size={14} />, href: project.code },
+  ].filter(Boolean);
+
   return (
-    <motion.div
-      whileHover={{ y: -5 }}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="h-full"
+    <motion.article
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-20px" }}
+      transition={{ duration: 0.7, delay: Math.min(index * 0.06, 0.3), ease }}
+      className={`card-surface group flex h-full flex-col overflow-hidden ${large ? "lg:col-span-2 lg:flex-row" : ""}`}
     >
-      <div 
-        className="glass-card h-full flex flex-col"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      >
-        <div className="relative overflow-hidden h-40 sm:h-48">
-          <motion.div
-            animate={{ scale: isHovered ? 1.05 : 1 }}
-            transition={{ duration: 0.3 }}
-            className="absolute inset-0"
-          >
-            {imageSrc && (
-              <Image 
-                src={imageSrc}
-                alt={project.name}
-                fill
-                sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                onError={() => setImageError(true)}
-                style={{ objectFit: 'cover' }}
-                className="rounded-t-xl"
-                priority={project.id <= 4}
-              />
-            )}
-          </motion.div>
-          
-          <div className="absolute inset-0 bg-gradient-to-t from-dark-darker to-transparent opacity-70"></div>
-          
-          <div className="absolute bottom-3 sm:bottom-4 left-3 sm:left-4 z-10">
-            <span className="text-xxs sm:text-xs font-medium bg-primary/80 text-white px-1.5 sm:px-2 py-0.5 sm:py-1 rounded">
-              {project.role}
+      <ProjectCover
+        name={project.name}
+        index={index + 1}
+        className={large ? "h-56 sm:h-64 lg:h-auto lg:w-1/2 lg:min-h-[320px]" : "h-48 sm:h-52"}
+      />
+
+      <div className={`flex flex-1 flex-col p-6 ${large ? "lg:p-8" : ""}`}>
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="eyebrow">{project.role}</p>
+            <h3 className={`mt-2 font-display font-semibold tracking-tight ${large ? "text-2xl sm:text-3xl" : "text-xl"}`}>
+              {project.name}
+            </h3>
+            {project.tagline && <p className="mt-1 text-sm text-muted">{project.tagline}</p>}
+          </div>
+          {project.playstore && (
+            <span className="chip shrink-0 gap-1.5">
+              <FaGooglePlay size={10} /> Live on Play
             </span>
-          </div>
+          )}
         </div>
-        
-        <div className="p-3 sm:p-4 flex-grow flex flex-col">
-          <h3 className={`font-semibold text-sm sm:text-base md:text-lg ${isDark ? 'text-white' : 'text-gray-900'} mb-1.5 sm:mb-2 truncate`}>
-            {project.name}
-          </h3>
-          
-          <p className={`${isDark ? 'text-gray-300' : 'text-gray-700'} text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-3 flex-grow`}>
-            {project.description}
-          </p>
-          
-          <div className="flex flex-wrap gap-1.5 mt-auto mb-2 sm:mb-3">
-            {project.tools.slice(0, 3).map((tool, index) => (
-              <span 
-                key={index} 
-                className={`text-[10px] sm:text-xs px-1.5 py-0.5 ${isDark ? 'bg-dark-lighter text-gray-300' : 'bg-light-darker text-gray-700'} rounded`}
-              >
-                {tool}
-              </span>
-            ))}
-            {project.tools.length > 3 && (
-              <span className={`text-[10px] sm:text-xs px-1.5 py-0.5 ${isDark ? 'bg-dark-lighter text-gray-300' : 'bg-light-darker text-gray-700'} rounded`}>
-                +{project.tools.length - 3}
-              </span>
-            )}
-          </div>
-          
-          <div className="flex gap-2 mt-auto">
-            {project.code && (
-              <Link 
-                href={project.code} 
-                target="_blank"
-                className={`text-xs sm:text-sm flex items-center gap-1 ${isDark ? 'text-gray-300' : 'text-gray-700'} hover:text-primary transition-colors`}
-                aria-label={`View ${project.name} source code`}
-              >
-                <FaGithub className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                <span>Code</span>
-              </Link>
-            )}
-            
-            {project.demo && (
-              <Link 
-                href={project.demo}
-                target="_blank" 
-                className={`text-xs sm:text-sm flex items-center gap-1 ${isDark ? 'text-gray-300' : 'text-gray-700'} hover:text-primary transition-colors`}
-                aria-label={`View ${project.name} live demo`}
-              >
-                <FiExternalLink className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                <span>Demo</span>
-              </Link>
-            )}
-          </div>
+
+        <p className={`mt-4 text-sm leading-relaxed text-fg/80 ${large ? "" : "line-clamp-3"}`}>{project.description}</p>
+
+        <div className="mt-5 flex flex-wrap gap-2">
+          {project.tools.slice(0, large ? 8 : 4).map((t) => (
+            <span key={t} className="chip">
+              {t}
+            </span>
+          ))}
+          {!large && project.tools.length > 4 && <span className="chip">+{project.tools.length - 4}</span>}
+        </div>
+
+        <div className="mt-auto flex flex-wrap items-center gap-2 pt-6">
+          {links.map((l) => (
+            <a
+              key={l.label}
+              href={l.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${project.name} ${l.label}`}
+              className={`btn h-9 px-4 text-xs ${l.primary ? "btn-solid" : "btn-outline"}`}
+            >
+              {l.icon}
+              {l.label}
+            </a>
+          ))}
         </div>
       </div>
-    </motion.div>
+    </motion.article>
   );
 }
 

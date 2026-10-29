@@ -1,44 +1,46 @@
-// @flow strict
-
 import { personalData } from "@/utils/data/personal-data";
+import Link from "next/link";
+import { FiArrowLeft } from "react-icons/fi";
 import BlogCard from "../components/homepage/blog/blog-card";
 
-async function getBlogs() {
-  const res = await fetch(`https://dev.to/api/articles?username=${personalData.devUsername}`)
-
-  if (!res.ok) {
-    throw new Error('Failed to fetch data')
-  }
-
-  const data = await res.json();
-  return data;
+export const metadata = {
+  title: `Blog | ${personalData.name}`,
 };
 
-async function page() {
-  const blogs = await getBlogs();
+async function getBlogs() {
+  try {
+    const res = await fetch(`https://dev.to/api/articles?username=${personalData.devUsername}`, {
+      next: { revalidate: 3600 },
+    });
+    if (!res.ok) return [];
+    return await res.json();
+  } catch {
+    return [];
+  }
+}
+
+export default async function BlogPage() {
+  const blogs = (await getBlogs()).filter((b) => b?.cover_image);
 
   return (
-    <div className="py-8">
-      <div className="flex justify-center my-5 lg:py-8">
-        <div className="flex  items-center">
-          <span className="w-24 h-[2px] bg-[#1a1443]"></span>
-          <span className="bg-[#1a1443] w-fit text-white p-2 px-5 text-2xl rounded-md">
-            All Blog
-          </span>
-          <span className="w-24 h-[2px] bg-[#1a1443]"></span>
-        </div>
-      </div>
+    <section className="section pt-32">
+      <div className="container-x">
+        <Link href="/" className="link-underline inline-flex items-center gap-2 text-sm text-muted hover:text-fg">
+          <FiArrowLeft /> Back home
+        </Link>
+        <p className="eyebrow mt-8">Writing</p>
+        <h1 className="mt-4 font-display text-5xl font-semibold tracking-tightest sm:text-6xl">Blog.</h1>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 md:gap-5 lg:gap-8 xl:gap-10">
-        {
-          blogs.map((blog, i) => (
-            blog?.cover_image &&
-            <BlogCard blog={blog} key={i} />
-          ))
-        }
+        {blogs.length === 0 ? (
+          <p className="mt-10 text-muted">No articles yet. Check back soon.</p>
+        ) : (
+          <div className="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {blogs.map((blog) => (
+              <BlogCard blog={blog} key={blog.id} />
+            ))}
+          </div>
+        )}
       </div>
-    </div>
+    </section>
   );
-};
-
-export default page;
+}

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
-import { useTheme } from "@/app/context/ThemeContext";
 import { FiSend, FiX } from 'react-icons/fi';
 import { RiRobot2Fill } from 'react-icons/ri';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -10,13 +9,11 @@ import ChatToggle from './ChatToggle';
 import { personalInfo } from './chatbot-data';
 
 const ChatBot = () => {
-  const { theme } = useTheme();
-  const isDark = theme === "dark";
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
     {
       id: 1,
-      text: "Welcome to my Portfolio AI Chat! Ask me anything about Elvin's skills, projects, or interests.",
+      text: "Hi! I'm Elvin's portfolio assistant. Ask me about his skills, projects, experience or education.",
       sender: 'bot',
       timestamp: new Date()
     }
@@ -242,103 +239,72 @@ What specific aspect of Elvin's background would you like to learn more about?`;
 
   return (
     <>
-      <ChatToggle isOpen={isOpen} toggleChat={toggleChat} isDark={isDark} />
-      
+      <ChatToggle isOpen={isOpen} toggleChat={toggleChat} />
+
       <AnimatePresence>
         {isOpen && (
-          <motion.div 
-            className={`fixed bottom-20 right-6 sm:right-8 z-50 w-[320px] sm:w-[350px] max-w-[90vw] rounded-2xl shadow-xl overflow-hidden ${
-              isDark ? 'bg-[#0f172a] border border-[#1f2937]' : 'bg-white border border-gray-200'
-            }`}
-            initial={{ opacity: 0, y: 20, scale: 0.9 }}
+          <motion.div
+            className="fixed bottom-24 left-6 z-50 w-[340px] max-w-[calc(100vw-3rem)] overflow-hidden rounded-3xl border border-line bg-bg shadow-lift"
+            initial={{ opacity: 0, y: 16, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.9 }}
-            transition={{ duration: 0.3 }}
+            exit={{ opacity: 0, y: 16, scale: 0.96 }}
+            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
           >
-            {/* Chat header */}
-            <div className={`p-4 flex items-center justify-between ${
-              isDark ? 'bg-[#1e293b] text-white' : 'bg-violet-600 text-white'
-            }`}>
-              <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 rounded-full bg-violet-800 flex items-center justify-center">
-                  <RiRobot2Fill size={18} className="text-white" />
+            {/* Header */}
+            <div className="flex items-center justify-between border-b border-line px-4 py-3">
+              <div className="flex items-center gap-3">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-fg text-bg">
+                  <RiRobot2Fill size={16} />
                 </div>
                 <div>
-                  <h3 className="font-medium">Portfolio AI Chat</h3>
-                  <div className="flex items-center text-xs">
-                    <span className="w-2 h-2 rounded-full bg-green-400 mr-1"></span>
-                    <span>Online</span>
+                  <h3 className="font-display text-sm font-semibold">Ask about Elvin</h3>
+                  <div className="flex items-center gap-1.5 text-[11px] text-muted">
+                    <span className="h-1.5 w-1.5 rounded-full bg-fg" />
+                    Online
                   </div>
                 </div>
               </div>
-              <button 
-                onClick={toggleChat}
-                className="p-1 rounded-full hover:bg-black/10 transition-colors"
-              >
-                <FiX size={20} />
+              <button type="button" onClick={toggleChat} aria-label="Close chat" className="icon-btn h-8 w-8">
+                <FiX size={16} />
               </button>
             </div>
-            
-            {/* Chat messages */}
-            <div className={`h-[350px] overflow-y-auto p-4 ${
-              isDark ? 'bg-[#0f172a] text-gray-200' : 'bg-gray-50 text-gray-800'
-            }`}>
+
+            {/* Messages */}
+            <div className="scrollbar-thin h-[340px] overflow-y-auto bg-bg p-4">
               {messages.map((message) => (
-                <ChatMessage 
-                  key={message.id} 
-                  message={message} 
-                  isDark={isDark} 
-                />
+                <ChatMessage key={message.id} message={message} />
               ))}
               {isTyping && (
-                <div className="flex items-center space-x-2 mt-2">
-                  <div className="w-8 h-8 rounded-full bg-violet-600 flex items-center justify-center">
-                    <RiRobot2Fill size={16} className="text-white" />
-                  </div>
-                  <div className={`p-3 rounded-2xl max-w-[80%] ${
-                    isDark ? 'bg-[#1e293b]' : 'bg-violet-100'
-                  }`}>
-                    <div className="flex space-x-1">
-                      <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                      <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                      <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                <div className="mb-3 flex justify-start">
+                  <div className="rounded-2xl rounded-tl-md border border-line bg-card px-3.5 py-3">
+                    <div className="flex gap-1">
+                      {[0, 150, 300].map((d) => (
+                        <span key={d} className="h-1.5 w-1.5 animate-bounce rounded-full bg-fg/60" style={{ animationDelay: `${d}ms` }} />
+                      ))}
                     </div>
                   </div>
                 </div>
               )}
               <div ref={messagesEndRef} />
             </div>
-            
-            {/* Chat input */}
-            <form onSubmit={handleSubmit} className={`p-3 border-t ${
-              isDark ? 'border-[#1f2937] bg-[#0f172a]' : 'border-gray-200 bg-white'
-            }`}>
-              <div className="flex items-center space-x-2">
+
+            {/* Input */}
+            <form onSubmit={handleSubmit} className="border-t border-line p-3">
+              <div className="flex items-center gap-2">
                 <input
                   type="text"
                   value={inputValue}
                   onChange={handleInputChange}
-                  placeholder="Type your message..."
-                  className={`flex-1 py-2 px-3 rounded-full focus:outline-none ${
-                    isDark 
-                      ? 'bg-[#1e293b] text-white placeholder:text-gray-400 border border-[#2d3748]' 
-                      : 'bg-gray-100 text-gray-800 placeholder:text-gray-500'
-                  }`}
+                  placeholder="Ask about skills, projects, experience..."
+                  className="flex-1 rounded-full border border-line bg-card px-4 py-2.5 text-sm text-fg outline-none placeholder:text-muted/70 focus:border-fg"
                 />
-                <button 
+                <button
                   type="submit"
                   disabled={!inputValue.trim()}
-                  className={`p-2 rounded-full ${
-                    inputValue.trim() 
-                      ? isDark 
-                        ? 'bg-violet-600 text-white hover:bg-violet-700' 
-                        : 'bg-violet-600 text-white hover:bg-violet-700'
-                      : isDark 
-                        ? 'bg-[#1e293b] text-gray-500' 
-                        : 'bg-gray-200 text-gray-400'
-                  } transition-colors`}
+                  aria-label="Send"
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-fg text-bg transition-opacity disabled:opacity-30"
                 >
-                  <FiSend size={18} />
+                  <FiSend size={16} />
                 </button>
               </div>
             </form>

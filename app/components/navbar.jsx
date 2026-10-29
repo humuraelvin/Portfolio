@@ -1,237 +1,242 @@
 "use client";
 
 import { personalData } from "@/utils/data/personal-data";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { FaBars, FaDownload, FaTimes } from "react-icons/fa";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { FiArrowUpRight, FiDownload, FiMenu, FiX } from "react-icons/fi";
 import ThemeToggle from "./theme-toggle";
-import { useTheme } from "../context/ThemeContext";
 
 const navLinks = [
-  { name: "Home", href: "/" },
   { name: "About", href: "#about" },
+  { name: "Experience", href: "#experience" },
   { name: "Skills", href: "#skills" },
   { name: "Projects", href: "#projects" },
-  { name: "Experience", href: "#experience" },
-  { name: "Testimonials", href: "#testimonials" },
   { name: "Education", href: "#education" },
   { name: "Contact", href: "#contact" },
 ];
 
+const HEADER_OFFSET = 72;
+
 const NavBar = () => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const { theme } = useTheme();
-  const isDark = theme === "dark";
+  const [active, setActive] = useState("");
+  const [pill, setPill] = useState({ x: 0, w: 0 });
+  const linkRefs = useRef({});
+  const lockUntil = useRef(0);
 
-  const toggleMobileMenu = () => {
-    setMobileMenuOpen(!mobileMenuOpen);
-  };
-
+  // Scroll-driven active section (rAF-throttled, no IntersectionObserver churn)
   useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 10) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
+    let ticking = false;
+    const sections = navLinks.map((l) => ({ href: l.href, el: document.querySelector(l.href) })).filter((s) => s.el);
+
+    const update = () => {
+      ticking = false;
+      const y = window.scrollY;
+      setScrolled(y > 24);
+      if (Date.now() < lockUntil.current) return;
+      const probe = y + window.innerHeight * 0.35;
+      let current = "";
+      for (const s of sections) {
+        if (s.el.offsetTop - HEADER_OFFSET <= probe) current = s.href;
       }
+      setActive(current);
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  // Close menu when ESC key is pressed
-  useEffect(() => {
-    const handleEscKey = (event) => {
-      if (event.key === "Escape") {
-        setMobileMenuOpen(false);
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
       }
     };
-
-    document.addEventListener("keydown", handleEscKey);
-    return () => document.removeEventListener("keydown", handleEscKey);
-  }, []);
-
-  // Prevent scrolling when mobile menu is open
-  useEffect(() => {
-    if (mobileMenuOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
     return () => {
-      document.body.style.overflow = "auto";
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
     };
-  }, [mobileMenuOpen]);
+  }, []);
+
+  // Measure the active link and slide the pill to it
+  const measure = useCallback(() => {
+    const el = linkRefs.current[active];
+    if (!el) {
+      setPill((p) => ({ ...p, w: 0 }));
+      return;
+    }
+    setPill({ x: el.offsetLeft, w: el.offsetWidth });
+  }, [active]);
+
+  useLayoutEffect(() => {
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, [measure]);
+
+  const goTo = useCallback((href) => (e) => {
+    const el = document.querySelector(href);
+    if (!el) return;
+    e.preventDefault();
+    setActive(href);
+    lockUntil.current = Date.now() + 900;
+    const top = el.getBoundingClientRect().top + window.scrollY - HEADER_OFFSET + 1;
+    window.scrollTo({ top, behavior: "smooth" });
+    history.replaceState(null, "", href);
+    setOpen(false);
+  }, []);
+
+  useEffect(() => {
+    const onKey = (e) => e.key === "Escape" && setOpen(false);
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
 
   return (
     <>
       <motion.header
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.5 }}
-        className={`fixed top-0 left-0 right-0 z-50 ${
-          scrolled 
-            ? isDark 
-            ? "bg-dark-darker/90 backdrop-blur-xl shadow-lg" 
-              : "bg-light-darker/90 backdrop-blur-xl shadow-lg"
-            : "bg-transparent"
-        } transition-all duration-300`}
+        initial={{ y: -24, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+        className="fixed inset-x-0 top-0 z-50"
       >
-        <nav className="container mx-auto px-4 py-3 sm:py-4">
-          <div className="flex items-center justify-between">
-            {/* Logo/Name */}
-            <Link href="/" className="flex items-center z-50 relative">
-              <motion.span 
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                className="text-xl sm:text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary"
-              >
-                {personalData.name.split(' ')[0]}
-                <span className="text-[rgb(var(--foreground-rgb))]">.</span>
-              </motion.span>
-            </Link>
+        <div
+          className={`transition-[background-color,border-color] duration-300 ${
+            scrolled ? "border-b border-line bg-bg/90 backdrop-blur-sm" : "border-b border-transparent"
+          }`}
+        >
+          <nav className="container-x flex h-16 sm:h-[72px] items-center justify-between">
+            {/* Wordmark */}
+            <a href="#home" onClick={goTo("#home")} className="group relative z-50 flex items-center gap-2" aria-label="Home">
+              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-fg font-display text-sm font-bold text-bg transition-transform duration-300 group-hover:rotate-[-6deg]">
+                E
+              </span>
+              <span className="font-display text-base font-semibold tracking-tight">
+                {personalData.firstName}
+                <span className="text-muted">.</span>
+              </span>
+            </a>
 
-            {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center space-x-1">
-              {navLinks.map((link, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  <Link 
+            {/* Desktop nav */}
+            <div className="relative hidden lg:flex items-center rounded-full border border-line bg-card p-1">
+              <span
+                aria-hidden
+                className="absolute top-1 bottom-1 left-0 rounded-full bg-fg will-change-transform"
+                style={{
+                  transform: `translateX(${pill.x}px)`,
+                  width: pill.w,
+                  opacity: pill.w ? 1 : 0,
+                  transition: "transform 0.35s cubic-bezier(0.22,1,0.36,1), width 0.35s cubic-bezier(0.22,1,0.36,1), opacity 0.2s",
+                }}
+              />
+              {navLinks.map((link) => {
+                const isActive = active === link.href;
+                return (
+                  <a
+                    key={link.href}
                     href={link.href}
-                    className={`px-3 py-2 text-sm xl:text-base xl:px-4 ${isDark ? 'text-gray-300 hover:text-white' : 'text-gray-700 hover:text-gray-900'} transition-colors duration-300`}
+                    onClick={goTo(link.href)}
+                    ref={(el) => (linkRefs.current[link.href] = el)}
+                    className={`relative z-10 rounded-full px-4 py-2 text-sm font-medium transition-colors duration-300 ${
+                      isActive ? "text-bg" : "text-muted hover:text-fg"
+                    }`}
                   >
                     {link.name}
-                  </Link>
-                </motion.div>
-              ))}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: navLinks.length * 0.1 }}
-                className="flex items-center gap-2"
-              >
-                <ThemeToggle />
-                <Link 
-                  href={personalData.resume} 
-                  target="_blank"
-                  className="ml-2 sm:ml-4 px-3 py-2 sm:px-4 bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors duration-300 flex items-center gap-2 text-sm xl:text-base"
-                >
-                  <span>Resume</span>
-                  <FaDownload size={14} />
-                </Link>
-              </motion.div>
+                  </a>
+                );
+              })}
             </div>
 
-            {/* Mobile Menu Button and Theme Toggle */}
-            <div className="lg:hidden z-50 relative flex items-center gap-2">
+            {/* Right actions */}
+            <div className="flex items-center gap-2 sm:gap-3">
               <ThemeToggle />
-              <button
-                onClick={toggleMobileMenu}
-                aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
-                className={`p-2 rounded-lg ${isDark ? 'bg-dark-lighter' : 'bg-light-darker'} text-[rgb(var(--foreground-rgb))] focus:outline-none hover:bg-primary/80 transition-colors duration-300`}
+              <a
+                href={personalData.resume}
+                download={personalData.resumeFileName}
+                className="btn btn-solid hidden sm:inline-flex h-10 px-4 text-[13px]"
               >
-                {mobileMenuOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
+                <FiDownload size={15} />
+                Resume
+              </a>
+              <button
+                type="button"
+                onClick={() => setOpen((v) => !v)}
+                aria-label={open ? "Close menu" : "Open menu"}
+                aria-expanded={open}
+                className="icon-btn relative z-50 lg:hidden"
+              >
+                {open ? <FiX size={18} /> : <FiMenu size={18} />}
               </button>
             </div>
-          </div>
-        </nav>
+          </nav>
+        </div>
       </motion.header>
 
-      {/* Mobile Menu - Full screen overlay */}
+      {/* Mobile menu */}
       <AnimatePresence>
-        {mobileMenuOpen && (
-          <>
-            {/* Backdrop */}
-      <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-        transition={{ duration: 0.3 }}
-              className={`fixed inset-0 ${isDark ? 'bg-dark-darker/70' : 'bg-light-darker/70'} backdrop-blur-lg z-40 lg:hidden`}
-              onClick={() => setMobileMenuOpen(false)}
-            />
-            
-            {/* Slide-in menu */}
-            <motion.div
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "tween", duration: 0.3 }}
-              className={`fixed top-0 right-0 bottom-0 w-4/5 max-w-sm ${isDark ? 'bg-dark-darker/95' : 'bg-light-darker/95'} backdrop-blur-lg z-50 lg:hidden shadow-xl`}
-            >
-              {/* Close button inside sidebar */}
-              <button
-                onClick={() => setMobileMenuOpen(false)}
-                aria-label="Close menu"
-                className={`absolute top-6 right-6 p-2 rounded-full ${isDark ? 'bg-dark-lighter' : 'bg-light-darker'} text-[rgb(var(--foreground-rgb))] hover:bg-primary/80 transition-colors duration-300`}
-              >
-                <FaTimes size={18} />
-              </button>
-              
-              <div className="flex flex-col h-full pt-20 pb-6 px-6">
-                <div className="flex-grow overflow-y-auto">
-                  <div className="flex flex-col space-y-1">
-                    {navLinks.map((link, index) => (
-                      <motion.div
-                        key={index}
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.05 }}
-                      >
-                        <Link
-                          href={link.href}
-                          onClick={() => setMobileMenuOpen(false)}
-                          className={`block px-4 py-3 text-lg font-medium ${isDark ? 'text-gray-300 hover:text-white hover:bg-dark-lighter' : 'text-gray-700 hover:text-gray-900 hover:bg-light-darker'} rounded-lg transition-colors duration-200`}
-              >
-                {link.name}
-              </Link>
-                      </motion.div>
-            ))}
-                  </div>
-                </div>
-                
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 }}
-                  className="mt-6"
-                >
-            <Link
-              href={personalData.resume}
-              target="_blank"
-              onClick={() => setMobileMenuOpen(false)}
-                    className="w-full px-4 py-3 bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors duration-300 flex items-center justify-center gap-2 text-lg font-medium"
-            >
-              <span>Resume</span>
-                    <FaDownload size={16} />
-            </Link>
-                </motion.div>
-                
-                <div className="mt-10 pt-6 border-t border-gray-700">
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.4 }}
-                    className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'} text-center`}
+        {open && (
+          <motion.div
+            key="mobile-menu"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-40 bg-bg lg:hidden"
+          >
+            <div className="container-x flex h-full flex-col pt-24 pb-10">
+              <ul className="flex flex-col gap-1">
+                {navLinks.map((link, i) => (
+                  <motion.li
+                    key={link.href}
+                    initial={{ opacity: 0, y: 14 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.05 + i * 0.04, duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
                   >
-                    &copy; {new Date().getFullYear()} {personalData.name}
-                  </motion.div>
-          </div>
-        </div>
-      </motion.div>
-          </>
+                    <a
+                      href={link.href}
+                      onClick={goTo(link.href)}
+                      className={`group flex items-center justify-between border-b border-line py-4 font-display text-3xl font-semibold tracking-tight ${
+                        active === link.href ? "text-fg" : "text-fg/80"
+                      }`}
+                    >
+                      {link.name}
+                      <FiArrowUpRight className="text-muted transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" />
+                    </a>
+                  </motion.li>
+                ))}
+              </ul>
+
+              <motion.div
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3, duration: 0.35 }}
+                className="mt-auto flex flex-col gap-3"
+              >
+                <a
+                  href={personalData.resume}
+                  download={personalData.resumeFileName}
+                  onClick={() => setOpen(false)}
+                  className="btn btn-solid w-full"
+                >
+                  <FiDownload size={16} />
+                  Download Resume
+                </a>
+                <p className="text-center text-xs text-muted">
+                  &copy; {new Date().getFullYear()} {personalData.name}
+                </p>
+              </motion.div>
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
-      
-      {/* Spacer for fixed header */}
-      <div className="h-16"></div>
     </>
   );
 };

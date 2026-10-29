@@ -1,118 +1,97 @@
 "use client";
 
 import { personalData } from "@/utils/data/personal-data";
-import { useTheme } from "@/app/context/ThemeContext";
 import Link from "next/link";
-import { useState } from "react";
-import { FaEnvelope, FaGithub, FaLinkedinIn, FaTwitter } from "react-icons/fa";
+import { FiArrowUpRight } from "react-icons/fi";
+import { FaGithub, FaInstagram, FaLinkedinIn, FaXTwitter } from "react-icons/fa6";
+import { SiLeetcode } from "react-icons/si";
 
 const Footer = () => {
-  const { theme } = useTheme();
-  const isDark = theme === "dark";
-  const [hoveredIcon, setHoveredIcon] = useState(null);
-  
-  const currentYear = new Date().getFullYear();
-  
-  const footerLinks = [
-    { name: "Home", href: "/" },
+  const year = new Date().getFullYear();
+
+  const links = [
     { name: "About", href: "#about" },
+    { name: "Experience", href: "#experience" },
     { name: "Projects", href: "#projects" },
     { name: "Contact", href: "#contact" },
   ];
-  
-  const socialLinks = [
+
+  const socials = [
     { name: "GitHub", icon: <FaGithub />, url: personalData.socialMedia.github },
     { name: "LinkedIn", icon: <FaLinkedinIn />, url: personalData.socialMedia.linkedin },
-    { name: "Twitter", icon: <FaTwitter />, url: personalData.socialMedia.twitter },
-    { name: "Email", icon: <FaEnvelope />, url: `mailto:${personalData.email}` },
+    { name: "X", icon: <FaXTwitter />, url: personalData.socialMedia.twitter },
+    { name: "Instagram", icon: <FaInstagram />, url: personalData.socialMedia.instagram },
+    { name: "LeetCode", icon: <SiLeetcode />, url: personalData.socialMedia.leetcode },
   ];
 
   return (
-    <footer className={`${isDark ? 'bg-dark-darker' : 'bg-light-darker'} relative mt-16 sm:mt-20`}>
-      {/* Decorative Top Border */}
-      <div className="h-1 w-full bg-gradient-to-r from-primary via-secondary to-accent"></div>
-      
-      {/* Footer Content */}
-      <div className="container mx-auto px-4 py-8 sm:py-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {/* Column 1: Logo & Info */}
-          <div className="lg:col-span-2">
-            <Link href="/">
-              <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
-                {personalData.name}
-              </h3>
+    <footer className="relative mt-10 border-t border-line">
+      <div className="container-x pt-16 pb-10">
+        <div className="grid grid-cols-1 gap-12 md:grid-cols-12">
+          <div className="md:col-span-6">
+            <Link href="/" className="font-display text-2xl font-semibold tracking-tight">
+              {personalData.firstName}
+              <span className="text-muted">.</span>
             </Link>
-            <p className={`text-sm sm:text-base ${isDark ? 'text-gray-400' : 'text-gray-600'} mb-4 sm:mb-6 max-w-md`}>
-              Software developer specializing in creating exceptional digital experiences 
-              with a focus on quality, performance, and user experience.
-            </p>
-            <div className="flex gap-3">
-              {socialLinks.map((link, index) => (
-                <a 
-                  key={index}
-                  href={link.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`p-2 rounded-full ${isDark ? 'bg-dark-lighter hover:bg-primary/20' : 'bg-light hover:bg-primary/10'} text-primary transition-colors duration-300`}
-                  aria-label={link.name}
-                  onMouseEnter={() => setHoveredIcon(index)}
-                  onMouseLeave={() => setHoveredIcon(null)}
-                >
-                  {link.icon}
-                </a>
-              ))}
-            </div>
+            <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted">{personalData.tagline}</p>
+            <a
+              href={`mailto:${personalData.email}`}
+              className="link-underline mt-6 inline-flex items-center gap-1 font-medium text-fg"
+            >
+              {personalData.email}
+              <FiArrowUpRight />
+            </a>
           </div>
-          
-          {/* Column 2: Quick Links */}
-          <div>
-            <h4 className={`text-base sm:text-lg font-semibold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-              Quick Links
-            </h4>
-            <ul className="space-y-2">
-              {footerLinks.map((link, index) => (
-                <li key={index}>
-                  <Link 
-                    href={link.href}
-                    className={`text-sm ${isDark ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'} transition-colors duration-300`}
-                  >
-                    {link.name}
+
+          <div className="md:col-span-3">
+            <h4 className="eyebrow">Navigate</h4>
+            <ul className="mt-4 space-y-2">
+              {links.map((l) => (
+                <li key={l.href}>
+                  <Link href={l.href} className="link-underline text-sm text-fg/80 hover:text-fg">
+                    {l.name}
                   </Link>
                 </li>
               ))}
             </ul>
           </div>
-          
-          {/* Column 3: Contact */}
-          <div>
-            <h4 className={`text-base sm:text-lg font-semibold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-              Contact
-            </h4>
-            <div className="space-y-2">
-              <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                {personalData.location}
-              </p>
-              <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                <a 
-                  href={`mailto:${personalData.email}`}
-                  className="hover:text-primary transition-colors duration-300"
-                >
-                  {personalData.email}
-                </a>
-              </p>
-            </div>
+
+          <div className="md:col-span-3">
+            <h4 className="eyebrow">Elsewhere</h4>
+            <ul className="mt-4 space-y-2">
+              {socials.map((s) => (
+                <li key={s.name}>
+                  <a
+                    href={s.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="link-underline inline-flex items-center gap-2 text-sm text-fg/80 hover:text-fg"
+                  >
+                    <span className="text-muted">{s.icon}</span>
+                    {s.name}
+                  </a>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
-        
-        {/* Copyright */}
-        <div className={`mt-8 pt-6 border-t ${isDark ? 'border-gray-800' : 'border-gray-300'} text-center`}>
-          <p className={`text-xs sm:text-sm ${isDark ? 'text-gray-500' : 'text-gray-600'}`}>
-            &copy; {currentYear} {personalData.name}. All rights reserved.
+
+        {/* Giant wordmark */}
+        <div className="mt-16 select-none overflow-hidden">
+          <p className="text-outline whitespace-nowrap font-display text-[16vw] font-bold leading-none tracking-tightest md:text-[11vw]">
+            {personalData.name.toUpperCase()}
           </p>
+        </div>
+
+        <div className="mt-8 flex flex-col items-start justify-between gap-3 border-t border-line pt-6 pb-16 text-xs text-muted sm:flex-row sm:items-center sm:pb-0">
+          <p>
+            &copy; {year} {personalData.name}. All rights reserved.
+          </p>
+          <p>Designed &amp; built in {personalData.location}.</p>
         </div>
       </div>
     </footer>
   );
-}
+};
 
 export default Footer;

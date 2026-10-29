@@ -1,156 +1,107 @@
 "use client";
+
 import { isValidEmail } from "@/utils/check-email";
 import axios from "axios";
 import { useState } from "react";
-import { TbMailForward } from "react-icons/tb";
+import { FiArrowUpRight } from "react-icons/fi";
 import { toast } from "react-toastify";
-import { useTheme } from "@/app/context/ThemeContext";
+
+const fieldCls =
+  "w-full rounded-2xl border border-line bg-bg px-4 py-3.5 text-sm text-fg placeholder:text-muted/70 outline-none transition-colors duration-300 focus:border-fg";
 
 function ContactForm() {
-  const { theme } = useTheme();
-  const isDark = theme === "dark";
   const [error, setError] = useState({ email: false, required: false });
   const [isLoading, setIsLoading] = useState(false);
-  const [userInput, setUserInput] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
+  const [userInput, setUserInput] = useState({ name: "", email: "", message: "" });
 
-  const checkRequired = () => {
-    if (userInput.email && userInput.message && userInput.name) {
-      setError({ ...error, required: false });
-    }
-  };
+  const update = (key) => (e) => setUserInput((s) => ({ ...s, [key]: e.target.value }));
 
   const handleSendMail = async (e) => {
     e.preventDefault();
-
     if (!userInput.email || !userInput.message || !userInput.name) {
       setError({ ...error, required: true });
       return;
-    } else if (error.email) {
+    }
+    if (!isValidEmail(userInput.email)) {
+      setError({ required: false, email: true });
       return;
-    } else {
-      setError({ ...error, required: false });
-    };
+    }
+    setError({ email: false, required: false });
 
     try {
       setIsLoading(true);
-      
-      // Get the base URL, defaulting to the current origin if NEXT_PUBLIC_APP_URL is not defined
-      const baseUrl = typeof window !== 'undefined' 
-        ? window.location.origin 
-        : process.env.NEXT_PUBLIC_APP_URL || '';
-      
-      // Log for debugging
-      console.log('Sending message to:', `${baseUrl}/api/contact`);
-      
-      const res = await axios.post(
-        `${baseUrl}/api/contact`,
-        userInput
-      );
-
-      toast.success("Message sent successfully! I'll get back to you soon.");
-      setUserInput({
-        name: "",
-        email: "",
-        message: "",
-      });
-    } catch (error) {
-      console.error('Contact form error:', error);
-      const errorMessage = error?.response?.data?.message || error?.response?.data?.error || "Failed to send message. Please try again later.";
-      toast.error(errorMessage);
+      await axios.post("/api/contact", userInput);
+      toast.success("Message sent. I'll get back to you soon.");
+      setUserInput({ name: "", email: "", message: "" });
+    } catch (err) {
+      const msg = err?.response?.data?.message || err?.response?.data?.error || "Failed to send. Please try again.";
+      toast.error(msg);
     } finally {
       setIsLoading(false);
-    };
+    }
   };
 
   return (
-    <div className="glass-card p-0.5">
-      <div className={`${isDark ? 'bg-dark-lighter' : 'bg-light-darker'} p-8 rounded-xl`}>
-        <h3 className={`text-2xl font-bold mb-6 ${isDark ? 'text-white' : 'text-gray-900'}`}>Send a Message</h3>
-        <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'} mb-8`}>
-          {"Have a project in mind or want to discuss opportunities? I'd love to hear from you."}
-        </p>
-        <div className="space-y-6">
-          <div>
-            <label className={`block text-sm font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'} mb-2`}>Your Name</label>
-            <input
-              className={`w-full ${isDark ? 'bg-dark border-gray-700 text-white' : 'bg-white border-gray-300 text-gray-900'} border focus:border-primary focus:ring-1 focus:ring-primary rounded-lg px-4 py-3 outline-none transition-colors`}
-              type="text"
-              maxLength="100"
-              required={true}
-              onChange={(e) => setUserInput({ ...userInput, name: e.target.value })}
-              onBlur={checkRequired}
-              value={userInput.name}
-              placeholder="John Doe"
-            />
-          </div>
-
-          <div>
-            <label className={`block text-sm font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'} mb-2`}>Your Email</label>
-            <input
-              className={`w-full ${isDark ? 'bg-dark border-gray-700 text-white' : 'bg-white border-gray-300 text-gray-900'} border focus:border-primary focus:ring-1 focus:ring-primary rounded-lg px-4 py-3 outline-none transition-colors`}
-              type="email"
-              maxLength="100"
-              required={true}
-              value={userInput.email}
-              onChange={(e) => setUserInput({ ...userInput, email: e.target.value })}
-              onBlur={() => {
-                checkRequired();
-                setError({ ...error, email: !isValidEmail(userInput.email) });
-              }}
-              placeholder="example@email.com"
-            />
-            {error.email && <p className="mt-2 text-sm text-red-400">Please provide a valid email!</p>}
-          </div>
-
-          <div>
-            <label className={`block text-sm font-medium ${isDark ? 'text-gray-400' : 'text-gray-600'} mb-2`}>Your Message</label>
-            <textarea
-              className={`w-full ${isDark ? 'bg-dark border-gray-700 text-white' : 'bg-white border-gray-300 text-gray-900'} border focus:border-primary focus:ring-1 focus:ring-primary rounded-lg px-4 py-3 outline-none transition-colors resize-none`}
-              maxLength="500"
-              name="message"
-              required={true}
-              onChange={(e) => setUserInput({ ...userInput, message: e.target.value })}
-              onBlur={checkRequired}
-              rows="6"
-              value={userInput.message}
-              placeholder="Hello, I would like to talk about..."
-            />
-          </div>
-          
-          {error.required && (
-            <div className="bg-red-500/10 border border-red-500/30 text-red-400 px-4 py-3 rounded-lg text-sm">
-              All fields are required!
-            </div>
-          )}
-          
-          <button
-            className="w-full bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white font-medium py-3 px-6 rounded-lg transition-all duration-300 flex items-center justify-center"
-            onClick={handleSendMail}
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <span className="flex items-center gap-2">
-                <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                Sending Message...
-              </span>
-            ) : (
-              <span className="flex items-center gap-2">
-                Send Message
-                <TbMailForward size={20} />
-              </span>
-            )}
-          </button>
+    <form onSubmit={handleSendMail} className="card-surface p-6 sm:p-8">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div>
+          <label htmlFor="name" className="eyebrow mb-2 block">
+            Name
+          </label>
+          <input id="name" className={fieldCls} type="text" maxLength={100} value={userInput.name} onChange={update("name")} placeholder="Your name" />
+        </div>
+        <div>
+          <label htmlFor="email" className="eyebrow mb-2 block">
+            Email
+          </label>
+          <input
+            id="email"
+            className={fieldCls}
+            type="email"
+            maxLength={100}
+            value={userInput.email}
+            onChange={update("email")}
+            onBlur={() => setError((s) => ({ ...s, email: userInput.email ? !isValidEmail(userInput.email) : false }))}
+            placeholder="you@example.com"
+          />
+          {error.email && <p className="mt-2 text-xs text-fg/70">Please provide a valid email.</p>}
         </div>
       </div>
-    </div>
+
+      <div className="mt-4">
+        <label htmlFor="message" className="eyebrow mb-2 block">
+          Message
+        </label>
+        <textarea
+          id="message"
+          className={`${fieldCls} resize-none`}
+          maxLength={500}
+          rows={6}
+          value={userInput.message}
+          onChange={update("message")}
+          placeholder="Tell me about your project, role or idea..."
+        />
+      </div>
+
+      {error.required && (
+        <p className="mt-4 rounded-2xl border border-line bg-bg px-4 py-3 text-xs text-fg/80">All fields are required.</p>
+      )}
+
+      <button type="submit" disabled={isLoading} className="btn btn-solid group mt-6 w-full disabled:opacity-60">
+        {isLoading ? (
+          <>
+            <span className="h-4 w-4 animate-spin rounded-full border-2 border-accent-fg/40 border-t-accent-fg" />
+            Sending
+          </>
+        ) : (
+          <>
+            Send message
+            <FiArrowUpRight className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+          </>
+        )}
+      </button>
+    </form>
   );
-};
+}
 
 export default ContactForm;

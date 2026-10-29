@@ -1,108 +1,72 @@
 "use client";
 
-import { ScrollReveal } from "@/app/components/helper/scroll-reveal";
-import { useTheme } from "@/app/context/ThemeContext";
-import { motion } from "framer-motion";
-import { useState } from "react";
-import { FaEnvelope, FaGithub, FaLinkedinIn, FaMapMarkerAlt, FaTwitter } from "react-icons/fa";
 import { personalData } from "@/utils/data/personal-data";
+import { FaGithub, FaInstagram, FaLinkedinIn, FaXTwitter } from "react-icons/fa6";
+import { FiArrowUpRight, FiMail, FiMapPin } from "react-icons/fi";
+import SectionHeading from "../../helper/section-heading";
+import ScrollReveal from "../../helper/scroll-reveal";
 import ContactForm from "./contact-form";
 
 const ContactSection = () => {
-  const { theme } = useTheme();
-  const isDark = theme === "dark";
-  const [hoveredIcon, setHoveredIcon] = useState(null);
-  
-  const socialLinks = [
-    { name: "LinkedIn", icon: <FaLinkedinIn />, url: personalData.socialMedia.linkedin, color: "bg-[#0077B5]" },
-    { name: "GitHub", icon: <FaGithub />, url: personalData.socialMedia.github, color: "bg-[#333]" },
-    { name: "Twitter", icon: <FaTwitter />, url: personalData.socialMedia.twitter, color: "bg-[#1DA1F2]" },
+  const socials = [
+    { name: "GitHub", icon: <FaGithub size={16} />, url: personalData.socialMedia.github },
+    { name: "LinkedIn", icon: <FaLinkedinIn size={16} />, url: personalData.socialMedia.linkedin },
+    { name: "X", icon: <FaXTwitter size={15} />, url: personalData.socialMedia.twitter },
+    { name: "Instagram", icon: <FaInstagram size={16} />, url: personalData.socialMedia.instagram },
   ];
 
   return (
-    <section id="contact" className="py-16 sm:py-20 md:py-24 lg:py-28 relative overflow-hidden">
-      {/* Background decorations */}
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-dark-darker/50 to-transparent"></div>
-      </div>
+    <section id="contact" className="section border-t border-line">
+      <div className="container-x">
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16">
+          <div className="lg:col-span-5">
+            <SectionHeading index="07" eyebrow="Contact" title="Let's build something." lead="Have a project, a role or an idea? My inbox is open." />
 
-      <div className="container mx-auto px-4">
-        <ScrollReveal>
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 inline-block">
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
-                Get In Touch
-              </span>
-            </h2>
-            <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'} max-w-2xl mx-auto`}>
-              Have a project in mind or just want to say hello? Feel free to reach out and I&apos;ll get back to you as soon as possible.
-            </p>
-          </div>
-        </ScrollReveal>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <ScrollReveal direction="left">
-            <div className="glass-card p-0.5">
-              <div className={`${isDark ? 'bg-dark-lighter' : 'bg-light-darker'} p-6 sm:p-8 rounded-xl`}>
-                <h3 className={`text-xl sm:text-2xl font-bold mb-6 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                  Contact Information
-                </h3>
-                
-                <div className="space-y-4 sm:space-y-5 mb-6 sm:mb-8">
-                  <div className="flex items-start gap-3 sm:gap-4">
-                    <div className="mt-1 p-2 rounded-full bg-primary/10">
-                      <FaEnvelope className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
-                    </div>
+            <div className="mt-10 space-y-4">
+              <ScrollReveal delay={0.05}>
+                <a href={`mailto:${personalData.email}`} className="card-surface group flex items-center justify-between p-5">
+                  <div className="flex items-center gap-4">
+                    <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-line bg-bg transition-colors duration-300 group-hover:bg-fg group-hover:text-bg">
+                      <FiMail size={16} />
+                    </span>
                     <div>
-                      <h4 className={`text-sm sm:text-base font-medium mb-1 ${isDark ? 'text-white' : 'text-gray-900'}`}>Email</h4>
-                      <a 
-                        href={`mailto:${personalData.email}`} 
-                        className={`text-sm sm:text-base ${isDark ? 'text-gray-300 hover:text-white' : 'text-gray-700 hover:text-gray-900'} transition-colors duration-300`}
-                      >
-                        {personalData.email}
-                      </a>
+                      <p className="eyebrow">Email</p>
+                      <p className="mt-0.5 text-sm font-medium">{personalData.email}</p>
                     </div>
                   </div>
-                  
-                  <div className="flex items-start gap-3 sm:gap-4">
-                    <div className="mt-1 p-2 rounded-full bg-primary/10">
-                      <FaMapMarkerAlt className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
-                    </div>
-                    <div>
-                      <h4 className={`text-sm sm:text-base font-medium mb-1 ${isDark ? 'text-white' : 'text-gray-900'}`}>Location</h4>
-                      <p className={`text-sm sm:text-base ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-                        {personalData.location}
-                      </p>
-                    </div>
+                  <FiArrowUpRight className="text-muted transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </a>
+              </ScrollReveal>
+
+              <ScrollReveal delay={0.1}>
+                <div className="card-surface flex items-center gap-4 p-5">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-line bg-bg">
+                    <FiMapPin size={16} />
+                  </span>
+                  <div>
+                    <p className="eyebrow">Based in</p>
+                    <p className="mt-0.5 text-sm font-medium">{personalData.location}</p>
                   </div>
                 </div>
-                
-                <h4 className={`text-sm sm:text-base font-medium mb-3 ${isDark ? 'text-white' : 'text-gray-900'}`}>Connect with me</h4>
-                <div className="flex gap-3 sm:gap-4">
-                  {socialLinks.map((social, index) => (
-                    <motion.a
-                      key={index}
-                      href={social.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={`p-2.5 sm:p-3 rounded-full ${social.color} text-white flex items-center justify-center hover:opacity-90 transition-all duration-300`}
-                      onMouseEnter={() => setHoveredIcon(index)}
-                      onMouseLeave={() => setHoveredIcon(null)}
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.95 }}
-                      aria-label={`Visit my ${social.name} profile`}
-                    >
-                      <span className="text-base sm:text-lg">{social.icon}</span>
-                    </motion.a>
+              </ScrollReveal>
+
+              <ScrollReveal delay={0.15}>
+                <div className="flex items-center gap-2 pt-2">
+                  {socials.map((s) => (
+                    <a key={s.name} href={s.url} target="_blank" rel="noopener noreferrer" aria-label={s.name} className="icon-btn">
+                      {s.icon}
+                    </a>
                   ))}
                 </div>
-              </div>
+              </ScrollReveal>
             </div>
-          </ScrollReveal>
-          
-          <ScrollReveal direction="right">
-            <ContactForm />
-          </ScrollReveal>
+          </div>
+
+          <div className="lg:col-span-7">
+            <ScrollReveal delay={0.1}>
+              <ContactForm />
+            </ScrollReveal>
+          </div>
         </div>
       </div>
     </section>

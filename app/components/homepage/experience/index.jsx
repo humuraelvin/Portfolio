@@ -1,93 +1,94 @@
-"use client"
+"use client";
 
 import { experiences } from "@/utils/data/experience";
 import { motion } from "framer-motion";
-import Image from "next/image";
-import { BsPersonWorkspace } from "react-icons/bs";
-import { FaBriefcase } from "react-icons/fa";
-import experience from '../../../assets/lottie/code.json';
-import AnimationLottie from "../../helper/animation-lottie";
-import ScrollReveal from "../../helper/scroll-reveal";
-import { useTheme } from "@/app/context/ThemeContext";
+import SectionHeading from "../../helper/section-heading";
+
+const ease = [0.22, 1, 0.36, 1];
 
 function Experience() {
-  const { theme } = useTheme();
-  const isDark = theme === "dark";
-
   return (
-    <div id="experience" className={`relative py-20 lg:py-32 ${isDark ? 'bg-dark-lighter/30' : 'bg-gray-50'}`}>
-      {/* Background decorations */}
-      <div className="absolute inset-0 -z-10">
-        <div className={`absolute top-0 left-0 w-full h-full ${isDark ? 'bg-gradient-to-b from-dark/50 to-dark-darker/30' : 'bg-gradient-to-b from-gray-100/50 to-white/30'}`}></div>
-        <div className="absolute -right-32 top-1/4 w-64 h-64 bg-primary/5 rounded-full filter blur-3xl"></div>
-        <div className="absolute -left-32 bottom-1/4 w-64 h-64 bg-accent/5 rounded-full filter blur-3xl"></div>
-      </div>
+    <section id="experience" className="section border-t border-line">
+      <div className="container-x">
+        <div className="flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between">
+          <SectionHeading index="02" eyebrow="Experience" title="Where I've worked." />
+          <p className="max-w-sm text-sm text-muted lg:text-right">
+            Product teams, public sector and startups. Mobile, web and backend, end to end.
+          </p>
+        </div>
 
-      <div className="container mx-auto px-4">
-        <ScrollReveal>
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 inline-block">
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">
-                Work Experience
-              </span>
-            </h2>
-            <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'} max-w-2xl mx-auto`}>
-              My professional journey and roles that have contributed to my growth as a developer
-            </p>
-          </div>
-        </ScrollReveal>
+        <div className="relative mt-16">
+          {/* vertical rail */}
+          <div className="absolute left-[7px] top-2 bottom-2 w-px bg-line md:left-1/2 md:-translate-x-1/2" />
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          <ScrollReveal direction="left">
-            <div className="w-full mx-auto">
-              <AnimationLottie animationPath={experience} />
-            </div>
-          </ScrollReveal>
+          <ol className="space-y-12 md:space-y-20">
+            {experiences.map((exp, i) => {
+              const right = i % 2 === 1;
+              return (
+                <li key={exp.id} className="relative md:grid md:grid-cols-2 md:gap-16">
+                  {/* dot */}
+                  <span className="absolute left-0 top-2 flex h-[15px] w-[15px] items-center justify-center rounded-full border border-line bg-bg md:left-1/2 md:-translate-x-1/2">
+                    <span className="h-[7px] w-[7px] rounded-full bg-fg" />
+                  </span>
 
-          <div className="space-y-8">
-            {experiences.map((experience, index) => (
-              <ScrollReveal 
-                key={experience.id} 
-                direction="right" 
-                delay={index * 0.1}
-              >
-                <div className="glass-card p-0.5">
-                  <div className={`${isDark ? 'bg-dark' : 'bg-white'} p-6 rounded-xl ${!isDark && 'shadow-md'}`}>
-                    <div className="flex justify-between items-start mb-4">
-                      <div>
-                        <h3 className={`text-xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>{experience.title}</h3>
-                        <p className="text-primary">{experience.company}</p>
+                  {/* period (desktop opposite side) */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 12 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-20px" }}
+                    transition={{ duration: 0.6, ease }}
+                    className={`hidden md:block ${right ? "md:order-2 md:text-left" : "md:text-right"}`}
+                  >
+                    <p className="font-display text-2xl font-semibold tracking-tight text-fg">{exp.duration}</p>
+                    <p className="mt-1 text-sm text-muted">
+                      {exp.type} · {exp.location}
+                    </p>
+                  </motion.div>
+
+                  {/* card */}
+                  <motion.article
+                    initial={{ opacity: 0, y: 24 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-20px" }}
+                    transition={{ duration: 0.7, delay: 0.08, ease }}
+                    className={`card-surface ml-8 p-6 sm:p-8 md:ml-0 ${right ? "md:order-1" : ""}`}
+                  >
+                    <p className="eyebrow md:hidden">{exp.duration}</p>
+                    <h3 className="mt-2 font-display text-xl font-semibold tracking-tight sm:text-2xl md:mt-0">
+                      {exp.title}
+                    </h3>
+                    <p className="mt-1 text-sm font-medium text-fg/80">{exp.company}</p>
+                    <p className="mt-4 text-sm leading-relaxed text-muted">{exp.description}</p>
+
+                    {exp.highlights?.length > 0 && (
+                      <ul className="mt-5 space-y-2.5">
+                        {exp.highlights.map((h, k) => (
+                          <li key={k} className="flex gap-3 text-sm text-fg/85">
+                            <span className="mt-[9px] h-px w-4 shrink-0 bg-fg/50" />
+                            <span>{h}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+
+                    {exp.tags?.length > 0 && (
+                      <div className="mt-6 flex flex-wrap gap-2">
+                        {exp.tags.map((t) => (
+                          <span key={t} className="chip">
+                            {t}
+                          </span>
+                        ))}
                       </div>
-                      <span className="text-xs bg-accent/20 text-accent px-3 py-1 rounded-full">
-                        {experience.duration}
-                      </span>
-                    </div>
-                    
-                    <div className="flex items-start gap-3 mt-4">
-                      <div className="shrink-0 bg-accent/10 p-2 rounded-lg mt-1">
-                        <FaBriefcase className="text-accent w-5 h-5" />
-                      </div>
-                      <div>
-                        <p className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-700'} mb-3`}>{experience.description || "Developed and maintained applications, collaborated with cross-functional teams, and implemented best practices."}</p>
-                        
-                        {experience.responsibilities && (
-                          <ul className={`list-disc list-inside text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'} space-y-1 ml-2`}>
-                            {experience.responsibilities.map((task, i) => (
-                              <li key={i}>{task}</li>
-                            ))}
-                          </ul>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </ScrollReveal>
-            ))}
-          </div>
+                    )}
+                  </motion.article>
+                </li>
+              );
+            })}
+          </ol>
         </div>
       </div>
-    </div>
+    </section>
   );
-};
+}
 
 export default Experience;

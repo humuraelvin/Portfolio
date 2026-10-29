@@ -1,106 +1,36 @@
 "use client";
 
-import { motion } from 'framer-motion';
-import { useEffect, useRef, useState } from 'react';
+import { motion } from "framer-motion";
 
-// Animation variants for different directions
-const fadeVariants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1 },
-};
-
-const upVariants = {
-  hidden: { opacity: 0, y: 50 },
-  visible: { opacity: 1, y: 0 },
-};
-
-const downVariants = {
-  hidden: { opacity: 0, y: -50 },
-  visible: { opacity: 1, y: 0 },
-};
-
-const leftVariants = {
-  hidden: { opacity: 0, x: -50 },
-  visible: { opacity: 1, x: 0 },
-};
-
-const rightVariants = {
-  hidden: { opacity: 0, x: 50 },
-  visible: { opacity: 1, x: 0 },
-};
-
-const scaleVariants = {
-  hidden: { opacity: 0, scale: 0.8 },
-  visible: { opacity: 1, scale: 1 },
+const variants = {
+  up: { hidden: { opacity: 0, y: 28 }, visible: { opacity: 1, y: 0 } },
+  down: { hidden: { opacity: 0, y: -28 }, visible: { opacity: 1, y: 0 } },
+  left: { hidden: { opacity: 0, x: -28 }, visible: { opacity: 1, x: 0 } },
+  right: { hidden: { opacity: 0, x: 28 }, visible: { opacity: 1, x: 0 } },
+  fade: { hidden: { opacity: 0 }, visible: { opacity: 1 } },
+  scale: { hidden: { opacity: 0, scale: 0.96 }, visible: { opacity: 1, scale: 1 } },
 };
 
 export function ScrollReveal({
   children,
-  direction = 'up', // 'up', 'down', 'left', 'right', 'fade', 'scale'
+  direction = "up",
   delay = 0,
-  duration = 0.5,
+  duration = 0.55,
   once = true,
-  threshold = 0.1,
+  className = "",
 }) {
-  // Get appropriate animation variant based on direction
-  const getVariant = () => {
-    switch (direction) {
-      case 'down':
-        return downVariants;
-      case 'left':
-        return leftVariants;
-      case 'right':
-        return rightVariants;
-      case 'fade':
-        return fadeVariants;
-      case 'scale':
-        return scaleVariants;
-      case 'up':
-      default:
-        return upVariants;
-    }
-  };
-
   return (
     <motion.div
+      className={className}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once, threshold }}
-      transition={{ duration, delay }}
-      variants={getVariant()}
+      viewport={{ once, margin: "-20px" }}
+      transition={{ duration, delay, ease: [0.22, 1, 0.36, 1] }}
+      variants={variants[direction] || variants.up}
     >
       {children}
     </motion.div>
   );
 }
 
-export function useScrollReveal() {
-  const [isVisible, setIsVisible] = useState(false);
-  const ref = useRef(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsVisible(entry.isIntersecting);
-      },
-      {
-        threshold: 0.1,
-      }
-    );
-
-    const currentRef = ref.current;
-    if (currentRef) {
-      observer.observe(currentRef);
-    }
-
-    return () => {
-      if (currentRef) {
-        observer.unobserve(currentRef);
-      }
-    };
-  }, []);
-
-  return [ref, isVisible];
-}
-
-export default ScrollReveal; 
+export default ScrollReveal;

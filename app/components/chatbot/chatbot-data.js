@@ -55,59 +55,21 @@ Elvin rarely misses a match from either team and enjoys analyzing tactics, playe
 
 Beyond just watching, he occasionally plays football himself on weekends, trying to incorporate some of the techniques and movements he observes from his favorite players.`,
 
-  education: `Elvin has a strong educational foundation in technology and computer science:
+  education: `Elvin's education:
 
-- Bachelor's Degree in Computer Science with a focus on Software Engineering and Information Security. His academic journey included specialized coursework in algorithms, data structures, database systems, and network security. His capstone project involved developing a secure communication platform with end-to-end encryption.
+- Rwanda Coding Academy (2023 - 2026): Software Programming & Embedded Systems. An advanced-level programme focused on software engineering, embedded systems, cybersecurity and real-world project execution.
+- Ecole des Sciences Byimana (2020 - 2023): Ordinary Level studies with a science and mathematics focus.
+- Wisdom Primary School (2014 - 2019): Primary education.
 
-- Professional Certifications:
-  * AWS Certified Solutions Architect
-  * Certified Information Systems Security Professional (CISSP)
-  * Full Stack Web Development (MERN Stack) Certification
-  * Google Cloud Professional Developer
-  * Certified Ethical Hacker (CEH)
+Certifications and participations include the AIMS Rwanda IMO 2024 selection, the 2024 RCA Project-Execution Hackathon, the ThinkCyber Cyberium certificate (Python, Linux, penetration testing and network research), the International Youth Math Challenge and the Wavumbuzi Entrepreneurship Challenge.`,
 
-- Continuous Learning: Elvin is committed to lifelong learning and regularly completes courses through platforms like Coursera, Udemy, and edX. Recent areas of study include:
-  * Advanced React Patterns and Performance Optimization
-  * Machine Learning with TensorFlow
-  * Blockchain Development and Smart Contracts
-  * Cloud Architecture and Microservices
-  * UI/UX Design Principles
+  experience: `Elvin's professional experience:
 
-- Technical Workshops and Bootcamps: He has participated in intensive coding bootcamps and technical workshops focused on emerging technologies and best practices in software development.
+- Android / iOS Developer at StrongMinds Limited (2025 - 2026): built and maintained the mobile apps that support mental-health programmes, used daily by field teams on Android and iOS.
+- Mobile & Full-Stack Developer at Echo Solutions Ltd (Sep 2025 - 2026): shipped client-facing mobile and web products end to end, including the Talentix content platform published on Google Play.
+- Backend Developer Intern at MINISANTE, the Rwanda Ministry of Health (Feb 2025 - Jun 2025): developed and maintained backend services in Java, Python and Node.js with clean API design.
 
-- Open Source Contributions: Elvin actively contributes to open-source projects, which he considers an important part of his educational journey and professional development.`,
-
-  experience: `Elvin has accumulated diverse professional experience across multiple domains of software development:
-
-- Full Stack Development (5+ years):
-  * Architected and developed responsive, user-friendly web applications using modern JavaScript frameworks (React, Next.js, Vue.js)
-  * Implemented RESTful APIs and GraphQL endpoints with Node.js, Express, and various database technologies
-  * Optimized application performance through efficient state management, code splitting, and server-side rendering
-  * Integrated third-party services and APIs for payment processing, authentication, and data visualization
-  * Implemented comprehensive testing strategies including unit, integration, and end-to-end testing
-
-- Cybersecurity Analysis (3+ years):
-  * Conducted vulnerability assessments and penetration testing for web applications and network infrastructure
-  * Implemented security best practices including OAuth 2.0, JWT authentication, and data encryption
-  * Developed automated security scanning tools to identify potential vulnerabilities in codebases
-  * Created comprehensive security documentation and training materials for development teams
-  * Responded to security incidents and implemented mitigation strategies
-
-- Software Engineering (6+ years):
-  * Designed and implemented scalable, maintainable software architectures
-  * Developed microservices-based applications with Docker and Kubernetes for containerization and orchestration
-  * Implemented CI/CD pipelines for automated testing and deployment
-  * Optimized database performance through proper indexing, query optimization, and caching strategies
-  * Refactored legacy codebases to improve maintainability and performance
-
-- Technical Leadership (2+ years):
-  * Led cross-functional development teams using Agile methodologies
-  * Mentored junior developers through code reviews, pair programming, and technical guidance
-  * Collaborated with product managers and designers to translate business requirements into technical specifications
-  * Established coding standards, documentation practices, and technical processes
-  * Presented technical solutions to stakeholders and executive leadership
-
-Elvin's professional journey reflects his passion for creating high-quality software solutions that combine technical excellence with practical business value.`,
+He is not currently employed and is open to new Android, iOS and full-stack opportunities. Across these roles he has worked with Flutter, React, Next.js, Spring Boot, Node.js and PostgreSQL.`,
 
   contact: `You can reach out to Elvin through multiple channels:
 

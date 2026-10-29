@@ -1,60 +1,45 @@
-import { timeConverter } from '@/utils/time-converter';
-import Image from 'next/image';
-import Link from 'next/link';
-import { BsHeartFill } from 'react-icons/bs';
-import { FaCommentAlt } from 'react-icons/fa';
+import { timeConverter } from "@/utils/time-converter";
+import Image from "next/image";
+import Link from "next/link";
+import { FiArrowUpRight, FiHeart, FiMessageSquare } from "react-icons/fi";
 
 function BlogCard({ blog }) {
-
   return (
-    <div className="border border-[#1d293a] hover:border-[#464c6a] transition-all duration-500 bg-[#1b203e] rounded-lg relative group"
-    >
-      <div className="h-44 lg:h-52 w-auto cursor-pointer overflow-hidden rounded-t-lg">
+    <article className="card-surface group flex h-full flex-col overflow-hidden">
+      <Link href={blog.url} target="_blank" className="relative block h-48 overflow-hidden">
         <Image
           src={blog?.cover_image}
-          height={1080}
-          width={1920}
-          alt=""
-          className='h-full w-full group-hover:scale-110 transition-all duration-300'
+          fill
+          sizes="(max-width: 768px) 100vw, 33vw"
+          alt={blog.title}
+          className="mono-img object-cover transition-transform duration-700 group-hover:scale-105"
         />
-      </div>
-      <div className="p-2 sm:p-3 flex flex-col">
-        <div className="flex justify-between items-center text-[#16f2b3] text-sm">
-          <p>{timeConverter(blog.published_at)}</p>
-          <div className="flex items-center gap-3">
-            <p className="flex items-center gap-1">
-              <BsHeartFill />
-              <span>{blog.public_reactions_count}</span>
-            </p>
-            {blog.comments_count > 0 &&
-              <p className="flex items-center gap-1">
-                <FaCommentAlt />
-                <span>{blog.comments_count}</span>
-              </p>
-            }
-          </div>
+      </Link>
+      <div className="flex flex-1 flex-col p-5">
+        <div className="flex items-center justify-between text-xs text-muted">
+          <span>{timeConverter(blog.published_at)}</span>
+          <span className="flex items-center gap-3">
+            <span className="flex items-center gap-1">
+              <FiHeart size={12} /> {blog.public_reactions_count}
+            </span>
+            {blog.comments_count > 0 && (
+              <span className="flex items-center gap-1">
+                <FiMessageSquare size={12} /> {blog.comments_count}
+              </span>
+            )}
+          </span>
         </div>
-        <Link target='_blank' href={blog.url}>
-          <p className='my-2 lg:my-3 cursor-pointer text-lg text-white sm:text-xl font-medium hover:text-violet-500'>
-            {blog.title}
-          </p>
+        <Link href={blog.url} target="_blank" className="mt-3 font-display text-lg font-semibold tracking-tight hover:underline">
+          {blog.title}
         </Link>
-        <p className='mb-2 text-sm text-[#16f2b3]'>
-          {`${blog.reading_time_minutes} Min Read`}
-        </p>
-        <p className='text-sm lg:text-base text-[#d3d8e8] pb-3 lg:pb-6 line-clamp-3'>
-          {blog.description}
-        </p>
-        {/* <div className="">
-          <Link target='_blank' href={blog.url}>
-            <button className='bg-violet-500 text-white px-3 py-1.5 rounded-full text-xs'>
-              Read More
-            </button>
-          </Link>
-        </div> */}
+        <p className="mt-1 text-xs text-muted">{blog.reading_time_minutes} min read</p>
+        <p className="mt-3 line-clamp-3 flex-1 text-sm leading-relaxed text-fg/80">{blog.description}</p>
+        <Link href={blog.url} target="_blank" className="link-underline mt-4 inline-flex items-center gap-1 text-sm font-medium">
+          Read article <FiArrowUpRight />
+        </Link>
       </div>
-    </div>
+    </article>
   );
-};
+}
 
 export default BlogCard;

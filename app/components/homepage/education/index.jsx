@@ -1,98 +1,67 @@
-"use client"
+"use client";
 
-import { educations } from "@/utils/data/educations";
+import { certifications, educationData } from "@/utils/data/education-data";
 import { motion } from "framer-motion";
-import Image from "next/image";
-import { BsPersonWorkspace } from "react-icons/bs";
-import lottieFile from '../../../assets/lottie/study.json';
-import AnimationLottie from "../../helper/animation-lottie";
-import GlowCard from "../../helper/glow-card";
+import { FiAward } from "react-icons/fi";
+import SectionHeading from "../../helper/section-heading";
 import ScrollReveal from "../../helper/scroll-reveal";
-import { useTheme } from "@/app/context/ThemeContext";
-import { FaGraduationCap } from "react-icons/fa";
-import { educationData } from "@/utils/data/education-data";
+
+const ease = [0.22, 1, 0.36, 1];
 
 function Education() {
-  const { theme } = useTheme();
-  const isDark = theme === "dark";
-
   return (
-    <div id="education" className="relative py-20 lg:py-32">
-      {/* Background decorations */}
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-dark-darker/50 to-transparent"></div>
-        <div className="absolute -left-32 top-1/4 w-64 h-64 bg-primary/5 rounded-full filter blur-3xl"></div>
-        <div className="absolute -right-32 bottom-1/4 w-64 h-64 bg-secondary/5 rounded-full filter blur-3xl"></div>
-      </div>
+    <section id="education" className="section border-t border-line">
+      <div className="container-x">
+        <SectionHeading index="06" eyebrow="Education" title="Where I learned." />
 
-      <div className="container mx-auto px-4">
-        <ScrollReveal>
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 inline-block">
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
-                Education
-              </span>
-            </h2>
-            <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'} max-w-2xl mx-auto`}>
-              My academic journey and qualifications that have shaped my professional path
-            </p>
-          </div>
-        </ScrollReveal>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          <ScrollReveal direction="left">
-            <div className="w-full lg:w-4/5 mx-auto">
-              <AnimationLottie animationPath={lottieFile} />
-            </div>
-          </ScrollReveal>
-
-          <ScrollReveal direction="right">
-            <div className="space-y-8">
-              {educationData.map((item, index) => (
-                <motion.div 
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                  className={`relative pl-8 ${index !== educationData.length - 1 ? 'pb-8' : ''}`}
-                >
-                  {/* Timeline connector */}
-                  {index !== educationData.length - 1 && (
-                    <div className="absolute left-3.5 top-8 bottom-0 w-0.5 bg-primary/30"></div>
-                  )}
-                  
-                  {/* Timeline dot */}
-                  <div className="absolute left-0 top-1 w-7 h-7 rounded-full bg-primary/20 flex items-center justify-center">
-                    <FaGraduationCap className="text-primary w-3.5 h-3.5" />
-                  </div>
-                  
-                      <div>
-                    <div className="flex flex-wrap items-center justify-between gap-2 mb-1">
-                      <h3 className={`text-lg sm:text-xl font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                        {item.degree}
-                      </h3>
-                      <span className="text-xs sm:text-sm px-2 py-1 rounded-full bg-primary/10 text-primary font-medium">
-                        {item.period}
-                      </span>
-                    </div>
-                    
-                    <h4 className={`text-sm sm:text-base font-medium mb-2 ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-                      {item.institution}
-                    </h4>
-                    
-                    <p className={`text-xs sm:text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                      {item.description}
-                    </p>
-                  </div>
-                </motion.div>
-              ))}
+        <div className="mt-14 grid grid-cols-1 gap-12 lg:grid-cols-12">
+          <ol className="relative space-y-4 lg:col-span-8">
+            {educationData.map((item, i) => (
+              <motion.li
+                key={item.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-20px" }}
+                transition={{ duration: 0.6, delay: i * 0.08, ease }}
+                className="card-surface group grid grid-cols-1 gap-4 p-6 sm:grid-cols-[140px_1fr] sm:p-8"
+              >
+                <div>
+                  <p className="font-display text-lg font-semibold tracking-tight">{item.period}</p>
+                  {item.location && <p className="mt-1 text-xs text-muted">{item.location}</p>}
                 </div>
-              </ScrollReveal>
+                <div>
+                  <h3 className="font-display text-xl font-semibold tracking-tight">{item.institution}</h3>
+                  <p className="mt-1 text-sm font-medium text-fg/80">{item.degree}</p>
+                  <p className="mt-3 text-sm leading-relaxed text-muted">{item.description}</p>
+                </div>
+              </motion.li>
+            ))}
+          </ol>
+
+          <div className="lg:col-span-4">
+            <ScrollReveal delay={0.15}>
+              <div className="card-surface p-6 sm:p-8">
+                <div className="flex items-center gap-3">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-fg text-bg">
+                    <FiAward size={16} />
+                  </span>
+                  <h3 className="font-display text-lg font-semibold tracking-tight">Certifications</h3>
+                </div>
+                <ul className="mt-6 space-y-3">
+                  {certifications.map((c) => (
+                    <li key={c} className="flex gap-3 text-sm text-fg/85">
+                      <span className="mt-[9px] h-px w-4 shrink-0 bg-fg/50" />
+                      {c}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </ScrollReveal>
+          </div>
         </div>
       </div>
-    </div>
+    </section>
   );
-};
+}
 
 export default Education;

@@ -1,95 +1,48 @@
 "use client";
 
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { projectsData } from '@/utils/data/projects-data';
-import ProjectCard from './project-card';
-import { FaArrowRight } from 'react-icons/fa';
-import { useTheme } from "@/app/context/ThemeContext";
+import { projectsData } from "@/utils/data/projects-data";
+import { useState } from "react";
+import { FiArrowDown, FiArrowUp } from "react-icons/fi";
+import SectionHeading from "../../helper/section-heading";
+import ProjectCard from "./project-card";
 
-const Projects = ({ blogs = [] }) => {
+const FEATURED_COUNT = 6;
+
+const Projects = () => {
   const [showAll, setShowAll] = useState(false);
-  const { theme } = useTheme();
-  const isDark = theme === "dark";
-  
-  // Display only featured projects initially, or all if showAll is true
-  const featuredProjects = projectsData.filter(project => project.featured);
-  const projectsToDisplay = showAll 
-    ? projectsData 
-    : featuredProjects.slice(0, 6);
+  const featured = projectsData.filter((p) => p.featured).slice(0, FEATURED_COUNT);
+  const list = showAll ? projectsData : featured;
 
   return (
-    <div id='projects' className="relative z-10 py-12 sm:py-16 md:py-20 lg:py-28">
-      <div className="container mx-auto px-4 sm:px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          viewport={{ once: true }}
-          className="text-center mb-10 sm:mb-12 md:mb-16"
-        >
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 inline-block">
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
-              {showAll ? "All Projects" : "Featured Projects"}
-            </span>
-          </h2>
-          <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'} max-w-2xl mx-auto text-sm sm:text-base`}>
-            Explore my portfolio of projects that showcase my skills and experience in software development, 
-            from full-stack applications to specialized tools and interfaces.
+    <section id="projects" className="section border-t border-line">
+      <div className="container-x">
+        <div className="flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between">
+          <SectionHeading index="04" eyebrow="Projects" title="Selected work." />
+          <p className="max-w-sm text-sm text-muted lg:text-right">
+            {projectsData.length} projects, from a Play Store app to blockchain voting and security tooling.
           </p>
-        </motion.div>
-
-        <div className="projects-grid">
-          {projectsToDisplay.map((project, index) => (
-            <motion.div
-              key={project.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: Math.min(index * 0.1, 0.5) }}
-              viewport={{ once: true }}
-            >
-              <ProjectCard project={project} />
-            </motion.div>
-          ))}
         </div>
 
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          viewport={{ once: true }}
-          className="mt-8 sm:mt-10 md:mt-12 text-center"
-        >
-          {!showAll && projectsData.length > 6 && (
-            <motion.button
-              onClick={() => setShowAll(true)}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className={`px-6 py-3 ${isDark ? 'bg-dark-lighter' : 'bg-light-darker'} rounded-lg text-primary hover:bg-primary/10 transition-colors duration-300 flex items-center gap-2 mx-auto`}
-            >
-              View All Projects
-              <FaArrowRight className="text-sm" />
-            </motion.button>
-          )}
-          
-          {showAll && (
-            <motion.button
-              onClick={() => setShowAll(false)}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className={`px-6 py-3 ${isDark ? 'bg-dark-lighter' : 'bg-light-darker'} rounded-lg text-primary hover:bg-primary/10 transition-colors duration-300 flex items-center gap-2 mx-auto`}
-            >
-              Show Featured Only
-              <FaArrowRight className="text-sm rotate-180" />
-            </motion.button>
-          )}
-        </motion.div>
-      </div>
+        <div className="mt-14 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {list.map((project, i) => (
+              <ProjectCard key={project.id} project={project} index={i} large={i === 0 && project.size === "large"} />
+            ))}
+        </div>
 
-      {/* Background decorations - adjusted for mobile */}
-      <div className="absolute top-1/4 -left-16 sm:-left-32 w-48 sm:w-64 h-48 sm:h-64 bg-primary/5 rounded-full filter blur-3xl"></div>
-      <div className="absolute bottom-1/4 -right-16 sm:-right-32 w-48 sm:w-64 h-48 sm:h-64 bg-secondary/5 rounded-full filter blur-3xl"></div>
-    </div>
+        {projectsData.length > FEATURED_COUNT && (
+          <div className="mt-12 flex justify-center">
+            <button type="button" onClick={() => setShowAll((v) => !v)} className="btn btn-outline group">
+              {showAll ? "Show featured only" : `View all ${projectsData.length} projects`}
+              {showAll ? (
+                <FiArrowUp className="transition-transform duration-300 group-hover:-translate-y-0.5" />
+              ) : (
+                <FiArrowDown className="transition-transform duration-300 group-hover:translate-y-0.5" />
+              )}
+            </button>
+          </div>
+        )}
+      </div>
+    </section>
   );
 };
 

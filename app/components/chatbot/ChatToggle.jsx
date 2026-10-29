@@ -1,33 +1,22 @@
 "use client";
 
-import { motion } from 'framer-motion';
-import { RiRobot2Fill } from 'react-icons/ri';
-import { FiMessageSquare } from 'react-icons/fi';
+import { motion } from "framer-motion";
+import { FiMessageCircle, FiX } from "react-icons/fi";
 
-const ChatToggle = ({ isOpen, toggleChat, isDark }) => {
+const ChatToggle = ({ isOpen, toggleChat }) => {
   return (
     <motion.button
+      type="button"
       onClick={toggleChat}
-      className={`fixed left-6 bottom-6 z-50 p-3.5 rounded-full shadow-lg ${
-        isDark 
-          ? isOpen ? 'bg-violet-700 text-white' : 'bg-violet-600 text-white'
-          : isOpen ? 'bg-violet-700 text-white' : 'bg-violet-600 text-white'
-      } hover:scale-110 transition-all duration-300`}
-      whileHover={{ scale: 1.1 }}
-      whileTap={{ scale: 0.95 }}
-      initial={{ opacity: 0, y: 20 }}
+      aria-label={isOpen ? "Close chat" : "Open chat"}
+      className="fixed bottom-6 left-6 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-fg text-bg shadow-lift transition-transform duration-300 hover:scale-105"
+      initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 1.6, duration: 0.5 }}
+      whileTap={{ scale: 0.95 }}
     >
-      <div className="relative">
-        {isOpen ? (
-          <FiMessageSquare size={24} className="text-white" />
-        ) : (
-          <>
-            <RiRobot2Fill size={24} className="text-white" />
-            <span className="absolute -top-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></span>
-          </>
-        )}
-      </div>
+      {isOpen ? <FiX size={20} /> : <FiMessageCircle size={20} />}
+      {!isOpen && <span className="absolute right-0 top-0 h-2.5 w-2.5 rounded-full border-2 border-bg bg-fg" />}
     </motion.button>
   );
 };
