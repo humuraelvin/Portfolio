@@ -155,17 +155,17 @@ function HeroSection() {
             initial={{ opacity: 0, y: 24, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 0.9, delay: 0.35, ease }}
-            className="relative mx-auto w-full max-w-[320px] sm:max-w-[360px] lg:col-span-5 lg:ml-auto lg:mr-0"
+            className="relative mx-auto w-full max-w-[380px] lg:col-span-5 lg:max-w-[440px] lg:ml-auto lg:mr-0"
           >
-            <div className="group relative aspect-square overflow-hidden rounded-[2rem] border border-line bg-card shadow-lift">
+            <div className="group relative aspect-[4/5] overflow-hidden rounded-[2rem] border border-line bg-card shadow-lift">
               <Image
                 src={personalData.profile}
                 alt={personalData.name}
                 fill
                 priority
-                sizes="360px"
-                quality={90}
-                className="mono-img object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
+                sizes="(max-width: 1024px) 380px, 440px"
+                quality={85}
+                className="mono-img object-cover object-top transition-transform duration-700 group-hover:scale-[1.03]"
               />
               <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-bg/70 via-transparent to-transparent" />
 

@@ -2,8 +2,8 @@ export const personalData = {
   name: "Elvin Humura",
   firstName: "Elvin",
   lastName: "Humura",
-  profile: "/image/profile.png", // 256x256 real photo; rendered at a size that suits it
-  avatarUrl: "/image/profile.png",
+  profile: "/image/Elvin10.png",
+  avatarUrl: "/image/Elvin10.png",
   designation: "Software & Mobile Developer",
   roles: ["Mobile Developer", "Full-Stack Engineer", "Backend Developer", "Security Enthusiast"],
   tagline:
